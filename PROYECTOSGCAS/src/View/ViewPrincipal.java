@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import Controller.ControllerCambiaPanel;
+import Model.Usuario;
+import java.sql.SQLException;
 
 /**
  *
@@ -21,18 +23,26 @@ import Controller.ControllerCambiaPanel;
 public class ViewPrincipal extends javax.swing.JFrame {
 
     int x, y;
+    Usuario usuario;
     /**
      * Creates new form Principal
      */
     
-    public ViewPrincipal() {
+    public ViewPrincipal(Usuario usuario) {
         initComponents();
         this.setExtendedState(MAXIMIZED_BOTH);
         this.setLocationRelativeTo(this);
-        this.uno.setSelected(true);
+        this.uno.setSelected(true);        
+        ControllerCambiaPanel controllerCambiaPanel = new ControllerCambiaPanel(pnlPrincipal, new View.ViewpnlHome());
         
-        new ControllerCambiaPanel(pnlPrincipal, new View.ViewpnlHome());
+        this.usuario = usuario;
+        
     }
+
+    private ViewPrincipal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -700,7 +710,11 @@ public class ViewPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_seisActionPerformed
 
     private void cincoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cincoActionPerformed
-        new ControllerCambiaPanel(pnlPrincipal, new View.ViewpnlUsuario());
+        try {
+            new ControllerCambiaPanel(pnlPrincipal, new View.ViewpnlUsuario());
+        } catch (SQLException ex) {
+            Logger.getLogger(ViewPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if(this.cinco.isSelected()){
             this.uno.setColorNormal(new Color(0,0,51));
             this.uno.setColorHover(new Color(204,204,204));

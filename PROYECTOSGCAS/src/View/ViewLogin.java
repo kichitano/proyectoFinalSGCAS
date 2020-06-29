@@ -5,12 +5,21 @@
  */
 package View;
 
+import Controller.ControllerUsuario;
+import Model.Usuario;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author ACER
  */
 public class ViewLogin extends javax.swing.JFrame {
 
+    Controller.ControllerUsuario controllerUsuario = new ControllerUsuario();
+    Usuario usuario;
     /**
      * Creates new form ViewLogin
      */
@@ -18,6 +27,7 @@ public class ViewLogin extends javax.swing.JFrame {
         initComponents();
         
         this.setLocationRelativeTo(null);
+        jPanel2.requestFocus();
     }
 
     /**
@@ -37,17 +47,11 @@ public class ViewLogin extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jSeparator1 = new javax.swing.JSeparator();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jSeparator2 = new javax.swing.JSeparator();
         lblCerrar = new javax.swing.JLabel();
         lblMinimizar = new javax.swing.JLabel();
-        rSButtonMetro1 = new rsbuttom.RSButtonMetro();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
+        txtNombreUsuario = new RSMaterialComponent.RSTextFieldMaterial();
+        txtContrasenaUsuario = new RSMaterialComponent.RSPasswordMaterial();
+        btnIniciarSesion = new rojeru_san.rsbutton.RSButtonGradiente();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -76,37 +80,24 @@ public class ViewLogin extends javax.swing.JFrame {
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -10, 390, 410));
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icons8-password-50.png"))); // NOI18N
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 290, -1, -1));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 210, -1, -1));
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/USERLOGIN.png"))); // NOI18N
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 230, -1, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 130, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 51));
         jLabel7.setText("LOGIN");
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 50, -1, -1));
 
-        jTextField2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jTextField2.setForeground(new java.awt.Color(0, 0, 51));
-        jTextField2.setBorder(null);
-        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 150, 230, 30));
-        jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 260, 220, 20));
-
-        jPasswordField1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jPasswordField1.setForeground(new java.awt.Color(0, 0, 51));
-        jPasswordField1.setText("jPasswordField1");
-        jPasswordField1.setToolTipText("");
-        jPasswordField1.setBorder(null);
-        jPanel1.add(jPasswordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 230, 220, 30));
-        jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 180, 220, 20));
-
+        lblCerrar.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cerrar2.png"))); // NOI18N
         lblCerrar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblCerrarMouseClicked(evt);
             }
         });
-        jPanel1.add(lblCerrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 0, 40, 40));
+        jPanel1.add(lblCerrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 10, 40, 30));
 
         lblMinimizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/MINIMIZAR2.png"))); // NOI18N
         lblMinimizar.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -114,24 +105,29 @@ public class ViewLogin extends javax.swing.JFrame {
                 lblMinimizarMouseClicked(evt);
             }
         });
-        jPanel1.add(lblMinimizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 0, 40, 40));
+        jPanel1.add(lblMinimizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 10, 40, 50));
 
-        rSButtonMetro1.setBackground(new java.awt.Color(0, 0, 51));
-        rSButtonMetro1.setText("Inicio Sesion");
-        rSButtonMetro1.setColorNormal(new java.awt.Color(0, 0, 51));
-        jPanel1.add(rSButtonMetro1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 300, 160, 50));
+        txtNombreUsuario.setForeground(new java.awt.Color(0, 0, 0));
+        txtNombreUsuario.setColorMaterial(new java.awt.Color(153, 153, 153));
+        txtNombreUsuario.setPhColor(new java.awt.Color(153, 153, 153));
+        txtNombreUsuario.setPlaceholder("Usuario");
+        jPanel1.add(txtNombreUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 140, -1, -1));
 
-        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/USERLOGIN.png"))); // NOI18N
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 130, -1, -1));
+        txtContrasenaUsuario.setForeground(new java.awt.Color(0, 0, 0));
+        txtContrasenaUsuario.setColorMaterial(new java.awt.Color(153, 153, 153));
+        txtContrasenaUsuario.setPhColor(new java.awt.Color(153, 153, 153));
+        txtContrasenaUsuario.setPlaceholder("Contrasena");
+        jPanel1.add(txtContrasenaUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 220, -1, -1));
 
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/icons8-password-50.png"))); // NOI18N
-        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 210, -1, -1));
-
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/USERLOGIN.png"))); // NOI18N
-        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 40, -1, -1));
-
-        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/USERLOGIN.png"))); // NOI18N
-        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 110, -1, -1));
+        btnIniciarSesion.setText("Iniciar sesion");
+        btnIniciarSesion.setColorPrimario(new java.awt.Color(0, 0, 51));
+        btnIniciarSesion.setColorSecundarioHover(new java.awt.Color(0, 160, 255));
+        btnIniciarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIniciarSesionActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnIniciarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 310, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -151,16 +147,30 @@ public class ViewLogin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void lblCerrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCerrarMouseClicked
-        // TODO add your handling code here:
-        
-        System.exit(0);
-    }//GEN-LAST:event_lblCerrarMouseClicked
-
     private void lblMinimizarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblMinimizarMouseClicked
         // TODO add your handling code here:
         this.setState(ViewLogin.ICONIFIED);
     }//GEN-LAST:event_lblMinimizarMouseClicked
+
+    private void lblCerrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCerrarMouseClicked
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_lblCerrarMouseClicked
+
+    private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
+        try {
+            controlUsuarioIniciarSesion();
+            if(usuario != null){
+                ViewPrincipal viewPrincipal = new ViewPrincipal(usuario);
+                this.dispose();
+                viewPrincipal.setVisible(true);
+            }else{
+                JOptionPane.showMessageDialog(rootPane, "Error en las credenciales.");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ViewLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnIniciarSesionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -198,24 +208,22 @@ public class ViewLogin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private rojeru_san.rsbutton.RSButtonGradiente btnIniciarSesion;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel lblCerrar;
     private javax.swing.JLabel lblMinimizar;
-    private rsbuttom.RSButtonMetro rSButtonMetro1;
+    private RSMaterialComponent.RSPasswordMaterial txtContrasenaUsuario;
+    private RSMaterialComponent.RSTextFieldMaterial txtNombreUsuario;
     // End of variables declaration//GEN-END:variables
+
+    private void controlUsuarioIniciarSesion() throws SQLException {
+        usuario = controllerUsuario.controlUsuarioIniciarSesion(txtNombreUsuario.getText(), txtContrasenaUsuario.getPassword());
+    }
 }

@@ -1,0 +1,1 @@
+CALL `usp_I_agregarUsuario`('48511647', 'Christian Alexander', 'Cespedes Medina', 'cacespedes@upt.pe', '1', 'admin', '1234', '2020-06-28', '1')
