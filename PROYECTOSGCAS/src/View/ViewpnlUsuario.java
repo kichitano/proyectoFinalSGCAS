@@ -14,12 +14,16 @@ import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -36,6 +40,7 @@ public class ViewpnlUsuario extends javax.swing.JPanel {
     java.util.Date fechaRegistro = java.sql.Date.valueOf(LocalDate.now());
     DefaultTableModel defaultTableModel;
     List<Usuario> listaUsuario;
+    TableRowSorter<TableModel> rowSorter;
     
     public ViewpnlUsuario() throws SQLException {
         initComponents();
@@ -100,31 +105,26 @@ public class ViewpnlUsuario extends javax.swing.JPanel {
         jLabel8.setText("Fecha:");
         jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 190, 70, 30));
 
-        txtUsuarioCorreo.setBackground(new java.awt.Color(255, 255, 255));
         txtUsuarioCorreo.setForeground(new java.awt.Color(0, 0, 51));
         txtUsuarioCorreo.setEnabled(false);
         txtUsuarioCorreo.setPlaceholder("Correo Electrónico");
         jPanel1.add(txtUsuarioCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 130, 240, -1));
 
-        txtUsuarioDNI.setBackground(new java.awt.Color(255, 255, 255));
         txtUsuarioDNI.setForeground(new java.awt.Color(0, 0, 51));
         txtUsuarioDNI.setEnabled(false);
         txtUsuarioDNI.setPlaceholder("DNI");
         jPanel1.add(txtUsuarioDNI, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 130, 150, -1));
 
-        txtUsuarioApellidos.setBackground(new java.awt.Color(255, 255, 255));
         txtUsuarioApellidos.setForeground(new java.awt.Color(0, 0, 51));
         txtUsuarioApellidos.setEnabled(false);
         txtUsuarioApellidos.setPlaceholder("Apellidos");
         jPanel1.add(txtUsuarioApellidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 130, 280, -1));
 
-        txtUsuarioNombres.setBackground(new java.awt.Color(255, 255, 255));
         txtUsuarioNombres.setForeground(new java.awt.Color(0, 0, 51));
         txtUsuarioNombres.setEnabled(false);
         txtUsuarioNombres.setPlaceholder("Nombres");
         jPanel1.add(txtUsuarioNombres, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 130, 240, -1));
 
-        txtUsuarioNombreUsuario.setBackground(new java.awt.Color(255, 255, 255));
         txtUsuarioNombreUsuario.setForeground(new java.awt.Color(0, 0, 51));
         txtUsuarioNombreUsuario.setEnabled(false);
         txtUsuarioNombreUsuario.setPlaceholder("Usuario");
@@ -167,7 +167,6 @@ public class ViewpnlUsuario extends javax.swing.JPanel {
         });
         tbllistaUsuario.setIntercellSpacing(new java.awt.Dimension(1, 1));
         tbllistaUsuario.setName(""); // NOI18N
-        tbllistaUsuario.setRowSelectionAllowed(true);
         jScrollPane2.setViewportView(tbllistaUsuario);
 
         jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 420, 1020, 150));
@@ -200,7 +199,6 @@ public class ViewpnlUsuario extends javax.swing.JPanel {
         jLabel2.setText("Información del usuario");
         rSPanelMaterial1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(18, 26, -1, -1));
 
-        txtUsuarioContrasena.setBackground(new java.awt.Color(255, 255, 255));
         txtUsuarioContrasena.setForeground(new java.awt.Color(0, 0, 51));
         txtUsuarioContrasena.setEnabled(false);
         txtUsuarioContrasena.setPlaceholder("Contraseña");
@@ -214,6 +212,11 @@ public class ViewpnlUsuario extends javax.swing.JPanel {
 
         txtBuscarUsuario.setForeground(new java.awt.Color(0, 0, 51));
         txtBuscarUsuario.setPlaceholder("Ingrese texto a buscar...");
+        txtBuscarUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarUsuarioKeyReleased(evt);
+            }
+        });
         jPanel1.add(txtBuscarUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 360, 1020, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -289,13 +292,23 @@ public class ViewpnlUsuario extends javax.swing.JPanel {
                 controlUsuarioEditar(usuario);
                 JOptionPane.showMessageDialog(jPanel1, "Operación realizada con éxito.","Usuario",JOptionPane.INFORMATION_MESSAGE);
                 controlUsuarioListar();
-                deshabilitarControles();
+                limpiarControles();
+                deshabilitarControles();                
                 txtUsuarioContrasena.setText("");
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Error al realizar la operación solicitada.","Usuario", JOptionPane.WARNING_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnEditarUsuarioActionPerformed
+
+    private void txtBuscarUsuarioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarUsuarioKeyReleased
+        String busquedaUsuario = txtBuscarUsuario.getText();
+        if (busquedaUsuario.trim().length() == 0) {
+           rowSorter.setRowFilter(null);
+        } else {
+           rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + busquedaUsuario));
+        }
+    }//GEN-LAST:event_txtBuscarUsuarioKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -360,24 +373,24 @@ public class ViewpnlUsuario extends javax.swing.JPanel {
     }
     
     private void insertarUsuarioFormulario() {
-        usuario.setUsuId(listaUsuario.get(tbllistaUsuario.getSelectedRow()).getUsuId());
-        usuario.setUsuDNI(listaUsuario.get(tbllistaUsuario.getSelectedRow()).getUsuDNI());
+        usuario.setUsuId((Integer) tbllistaUsuario.getValueAt(tbllistaUsuario.getSelectedRow(), 0));
+        usuario.setUsuDNI((String) tbllistaUsuario.getValueAt(tbllistaUsuario.getSelectedRow(), 1));
         txtUsuarioDNI.setText(usuario.getUsuDNI());
-        usuario.setUsuNombres(listaUsuario.get(tbllistaUsuario.getSelectedRow()).getUsuNombres());
+        usuario.setUsuNombres((String) tbllistaUsuario.getValueAt(tbllistaUsuario.getSelectedRow(), 2));
         txtUsuarioNombres.setText(usuario.getUsuNombres());
-        usuario.setUsuApellidos(listaUsuario.get(tbllistaUsuario.getSelectedRow()).getUsuApellidos());
+        usuario.setUsuApellidos((String) tbllistaUsuario.getValueAt(tbllistaUsuario.getSelectedRow(), 3));
         txtUsuarioApellidos.setText(usuario.getUsuApellidos());
-        usuario.setUsuCorreo(listaUsuario.get(tbllistaUsuario.getSelectedRow()).getUsuCorreo());
-        txtUsuarioCorreo.setText(usuario.getUsuCorreo());
-        usuario.setUsuNivel(listaUsuario.get(tbllistaUsuario.getSelectedRow()).getUsuNivel());
-        cbxUsuarioNivel.setSelectedIndex(usuario.getUsuNivel());
-        usuario.setUsuNombreUsuario(listaUsuario.get(tbllistaUsuario.getSelectedRow()).getUsuNombreUsuario());
+        usuario.setUsuCorreo((String) tbllistaUsuario.getValueAt(tbllistaUsuario.getSelectedRow(), 4));
+        txtUsuarioCorreo.setText(usuario.getUsuCorreo());        
+        cbxUsuarioNivel.setSelectedItem((String) tbllistaUsuario.getValueAt(tbllistaUsuario.getSelectedRow(), 5));
+        usuario.setUsuNivel(cbxUsuarioNivel.getSelectedIndex());        
+        usuario.setUsuNombreUsuario((String) tbllistaUsuario.getValueAt(tbllistaUsuario.getSelectedRow(), 6));
         txtUsuarioNombreUsuario.setText(usuario.getUsuNombreUsuario());
         //CONTROL DE CONTRASEÑA        
-        usuario.setUsuFechaRegistro(listaUsuario.get(tbllistaUsuario.getSelectedRow()).getUsuFechaRegistro());
+        usuario.setUsuFechaRegistro((Date) tbllistaUsuario.getValueAt(tbllistaUsuario.getSelectedRow(), 7));
         lblUsuarioFecha.setText(usuario.getUsuFechaRegistro().toString());        
-        usuario.setUsuEstado(listaUsuario.get(tbllistaUsuario.getSelectedRow()).getUsuEstado());
-        cbxUsuarioEstado.setSelectedIndex(usuario.getUsuEstado());
+        cbxUsuarioEstado.setSelectedItem((String) tbllistaUsuario.getValueAt(tbllistaUsuario.getSelectedRow(), 8));        
+        usuario.setUsuEstado(cbxUsuarioEstado.getSelectedIndex());
         btnEditarUsuario.setEnabled(true);
     }
     
@@ -388,6 +401,8 @@ public class ViewpnlUsuario extends javax.swing.JPanel {
     private void controlUsuarioListar() throws SQLException {
         defaultTableModel.getDataVector().removeAllElements();
         listaUsuario = controllerUsuario.controlUsuarioListar();
+        rowSorter = new TableRowSorter<>(tbllistaUsuario.getModel());
+        tbllistaUsuario.setRowSorter(rowSorter);
         for(int i = 0; i < listaUsuario.size(); i++){
             defaultTableModel.addRow(new Object[]{
                 listaUsuario.get(i).getUsuId(),

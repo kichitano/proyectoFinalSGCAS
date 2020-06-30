@@ -7,10 +7,12 @@ package View;
 
 import Controller.ControllerUsuario;
 import Model.Usuario;
+import java.awt.Color;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 /**
  *
@@ -24,10 +26,10 @@ public class ViewLogin extends javax.swing.JFrame {
      * Creates new form ViewLogin
      */
     public ViewLogin() {
-        initComponents();
-        
+        initComponents();        
         this.setLocationRelativeTo(null);
         jPanel2.requestFocus();
+        pbaCargando.setVisible(false);    
     }
 
     /**
@@ -40,6 +42,7 @@ public class ViewLogin extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        pbaCargando = new rojeru_san.rsprogress.RSProgressMaterial();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -60,6 +63,7 @@ public class ViewLogin extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.add(pbaCargando, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 280, 90, 90));
 
         jPanel2.setBackground(new java.awt.Color(0, 0, 51));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -108,13 +112,13 @@ public class ViewLogin extends javax.swing.JFrame {
         jPanel1.add(lblMinimizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 10, 40, 50));
 
         txtNombreUsuario.setForeground(new java.awt.Color(0, 0, 0));
-        txtNombreUsuario.setColorMaterial(new java.awt.Color(153, 153, 153));
+        txtNombreUsuario.setColorMaterial(new java.awt.Color(0, 0, 51));
         txtNombreUsuario.setPhColor(new java.awt.Color(153, 153, 153));
         txtNombreUsuario.setPlaceholder("Usuario");
         jPanel1.add(txtNombreUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 140, -1, -1));
 
         txtContrasenaUsuario.setForeground(new java.awt.Color(0, 0, 0));
-        txtContrasenaUsuario.setColorMaterial(new java.awt.Color(153, 153, 153));
+        txtContrasenaUsuario.setColorMaterial(new java.awt.Color(0, 0, 51));
         txtContrasenaUsuario.setPhColor(new java.awt.Color(153, 153, 153));
         txtContrasenaUsuario.setPlaceholder("Contrasena");
         jPanel1.add(txtContrasenaUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 220, -1, -1));
@@ -158,18 +162,8 @@ public class ViewLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_lblCerrarMouseClicked
 
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
-        try {
-            controlUsuarioIniciarSesion();
-            if(usuario != null){
-                ViewPrincipal viewPrincipal = new ViewPrincipal(usuario);
-                this.dispose();
-                viewPrincipal.setVisible(true);
-            }else{
-                JOptionPane.showMessageDialog(rootPane, "Error en las credenciales.");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ViewLogin.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        thiniciarSesion iniciarSesion = new thiniciarSesion();
+        iniciarSesion.start();
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
 
     /**
@@ -219,10 +213,40 @@ public class ViewLogin extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblCerrar;
     private javax.swing.JLabel lblMinimizar;
+    private rojeru_san.rsprogress.RSProgressMaterial pbaCargando;
     private RSMaterialComponent.RSPasswordMaterial txtContrasenaUsuario;
     private RSMaterialComponent.RSTextFieldMaterial txtNombreUsuario;
     // End of variables declaration//GEN-END:variables
 
+    public class thiniciarSesion extends Thread
+    {
+       @Override
+       public void run()
+       {
+           txtNombreUsuario.setEnabled(false);
+           txtContrasenaUsuario.setEnabled(false);
+           btnIniciarSesion.setEnabled(false);
+           pbaCargando.setVisible(true);           
+          try {
+                controlUsuarioIniciarSesion();
+                if(usuario != null){
+                    ViewPrincipal viewPrincipal = new ViewPrincipal(usuario);
+                    ViewLogin.this.dispose();
+                    viewPrincipal.setVisible(true);
+                }else{
+                    JOptionPane.showMessageDialog(rootPane, "Error en las credenciales.");
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ViewLogin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            txtNombreUsuario.setEnabled(true);
+            txtContrasenaUsuario.setEnabled(true);
+            btnIniciarSesion.setEnabled(true);
+            pbaCargando.setVisible(false); 
+          this.interrupt();  
+       }
+    }
+    
     private void controlUsuarioIniciarSesion() throws SQLException {
         usuario = controllerUsuario.controlUsuarioIniciarSesion(txtNombreUsuario.getText(), txtContrasenaUsuario.getPassword());
     }

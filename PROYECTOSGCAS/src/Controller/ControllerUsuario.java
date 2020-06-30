@@ -84,27 +84,27 @@ public class ControllerUsuario {
     }
 
     public void controlUsuarioEditar(Usuario usuario) throws SQLException {
-        Connection connection = controllerConexion.conectarBD();    
-         PreparedStatement prepareStatement = connection.prepareStatement("{call usp_U_editarUsuario(?,?,?,?,?,?,?,?,?,?)}");    
-        if (usuario.getUsuContrasena().equals("")){
-            CallableStatement callableStatement2 = connection.prepareCall("{call usp_S_obtenerContrasena(?)}");   
-            callableStatement2.setInt(1, usuario.getUsuId());
-            ResultSet resultSet = callableStatement2.executeQuery();
-            while(resultSet.next()){
-                usuario.setUsuContrasena(resultSet.getString(1));
+        try (Connection connection = controllerConexion.conectarBD()) {
+            PreparedStatement prepareStatement = connection.prepareStatement("{call usp_U_editarUsuario(?,?,?,?,?,?,?,?,?,?)}");
+            if (usuario.getUsuContrasena().equals("")){
+                CallableStatement callableStatement2 = connection.prepareCall("{call usp_S_obtenerContrasena(?)}");
+                callableStatement2.setInt(1, usuario.getUsuId());
+                ResultSet resultSet = callableStatement2.executeQuery();
+                while(resultSet.next()){
+                    usuario.setUsuContrasena(resultSet.getString(1));
+                }
             }
+            prepareStatement.setInt(1, usuario.getUsuId());
+            prepareStatement.setString(2, usuario.getUsuDNI());
+            prepareStatement.setString(3, usuario.getUsuNombres());
+            prepareStatement.setString(4, usuario.getUsuApellidos());
+            prepareStatement.setString(5, usuario.getUsuCorreo());
+            prepareStatement.setInt(6, usuario.getUsuNivel());
+            prepareStatement.setString(7, usuario.getUsuNombreUsuario());
+            prepareStatement.setString(8, usuario.getUsuContrasena());
+            prepareStatement.setDate(9, java.sql.Date.valueOf(String.valueOf(usuario.getUsuFechaRegistro())));
+            prepareStatement.setInt(10, usuario.getUsuEstado());
+            prepareStatement.executeUpdate();
         }
-        prepareStatement.setInt(1, usuario.getUsuId());   
-        prepareStatement.setString(2, usuario.getUsuDNI());   
-        prepareStatement.setString(3, usuario.getUsuNombres());         
-        prepareStatement.setString(4, usuario.getUsuApellidos());         
-        prepareStatement.setString(5, usuario.getUsuCorreo());         
-        prepareStatement.setInt(6, usuario.getUsuNivel());   
-        prepareStatement.setString(7, usuario.getUsuNombreUsuario());         
-        prepareStatement.setString(8, usuario.getUsuContrasena());         
-        prepareStatement.setDate(9, java.sql.Date.valueOf(String.valueOf(usuario.getUsuFechaRegistro())));         
-        prepareStatement.setInt(10, usuario.getUsuEstado());   
-        prepareStatement.executeUpdate();
-        connection.close();        
     }    
 }   
