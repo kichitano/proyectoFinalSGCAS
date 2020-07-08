@@ -232,72 +232,88 @@ public class ViewpnlUsuario extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarUsuarioActionPerformed
-        if(btnAgregarUsuario.getText().equals("Nuevo")){
-            btnAgregarUsuario.setText("Agregar");
-            btnEditarUsuario.setText("Cancelar");            
-            txtBuscarUsuario.setEnabled(false);
-            tbllistaUsuario.setEnabled(false);   
-            tbllistaUsuario.clearSelection();
-            fechaRegistro = java.sql.Date.valueOf(LocalDate.now());
-            lblUsuarioFecha.setText(fechaRegistro.toString());
-            habilitarControles();
-            limpiarControles();
-        }else if(btnAgregarUsuario.getText().equals(("Agregar"))){
-            try{    
-                usuario = new Usuario(
-                0, 
-                txtUsuarioDNI.getText(), 
-                txtUsuarioNombres.getText(), 
-                txtUsuarioApellidos.getText(), 
-                txtUsuarioCorreo.getText(), 
-                cbxUsuarioNivel.getSelectedIndex(), 
-                txtUsuarioNombreUsuario.getText(), 
-                String.valueOf(txtUsuarioContrasena.getPassword()), 
-                fechaRegistro, 
-                cbxUsuarioEstado.getSelectedIndex());
-                controlUsuarioGuardar(usuario);
-                JOptionPane.showMessageDialog(jPanel1, "Operación realizada con éxito.","Usuario",JOptionPane.INFORMATION_MESSAGE);
-                lblUsuarioFecha.setText("");
-                controlUsuarioListar();                
-            }catch(HeadlessException | SQLException e){
-                JOptionPane.showMessageDialog(null, "Error al realizar la operación solicitada.","Usuario", JOptionPane.WARNING_MESSAGE);
-            }             
-            deshabilitarControles();
-        }else if(btnAgregarUsuario.getText().equals("Cancelar")){
-            deshabilitarControles();
-            insertarUsuarioFormulario();
-            tbllistaUsuario.setEnabled(true);
+        switch (btnAgregarUsuario.getText()) {
+            case "Nuevo":
+                limpiarControles();
+                habilitarControles();                
+                btnAgregarUsuario.setText("Agregar");
+                btnEditarUsuario.setText("Cancelar");
+                txtBuscarUsuario.setEnabled(false);
+                tbllistaUsuario.setEnabled(false);
+                tbllistaUsuario.clearSelection();
+                fechaRegistro = java.sql.Date.valueOf(LocalDate.now());
+                lblUsuarioFecha.setText(fechaRegistro.toString());                
+                break;
+            case "Agregar":
+                try{
+                    usuario = new Usuario(
+                            0,
+                            txtUsuarioDNI.getText(),
+                            txtUsuarioNombres.getText(),
+                            txtUsuarioApellidos.getText(),
+                            txtUsuarioCorreo.getText(),
+                            cbxUsuarioNivel.getSelectedIndex(),
+                            txtUsuarioNombreUsuario.getText(),
+                            String.valueOf(txtUsuarioContrasena.getPassword()),
+                            fechaRegistro,
+                            cbxUsuarioEstado.getSelectedIndex());
+                    controlUsuarioGuardar(usuario);
+                    JOptionPane.showMessageDialog(jPanel1, "Operación realizada con éxito.","Usuario",JOptionPane.INFORMATION_MESSAGE);
+                    lblUsuarioFecha.setText("");
+                    controlUsuarioListar();
+                    txtBuscarUsuario.setEnabled(true);
+                    tbllistaUsuario.setEnabled(true);
+                }catch(HeadlessException | SQLException e){
+                    JOptionPane.showMessageDialog(null, "Error al realizar la operación solicitada.","Usuario", JOptionPane.WARNING_MESSAGE);
+                }   deshabilitarControles();
+                break;
+            case "Cancelar":
+                deshabilitarControles();
+                insertarUsuarioFormulario();
+                tbllistaUsuario.setEnabled(true);
+                break;
+            default:
+                break;
         }
     }//GEN-LAST:event_btnAgregarUsuarioActionPerformed
 
     private void btnEditarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarUsuarioActionPerformed
-        if(btnEditarUsuario.getText().equals("Cancelar")){
-            deshabilitarControles();
-        }else if(btnEditarUsuario.getText().equals("Editar")){
-            btnEditarUsuario.setText("Guardar");
-            btnAgregarUsuario.setText("Cancelar");
-            tbllistaUsuario.setEnabled(false);
-            habilitarControles();
-        }else if(btnEditarUsuario.getText().equals("Guardar")){            
-            usuario.setUsuDNI(txtUsuarioDNI.getText());
-            usuario.setUsuNombres(txtUsuarioNombres.getText());
-            usuario.setUsuApellidos(txtUsuarioApellidos.getText()); 
-            usuario.setUsuCorreo(txtUsuarioCorreo.getText()); 
-            usuario.setUsuNivel(cbxUsuarioNivel.getSelectedIndex());
-            usuario.setUsuNombreUsuario(txtUsuarioNombreUsuario.getText());
-            usuario.setUsuContrasena(String.valueOf(txtUsuarioContrasena.getPassword()));
-            usuario.setUsuEstado(cbxUsuarioEstado.getSelectedIndex());
-            tbllistaUsuario.setEnabled(true);
-            try {
-                controlUsuarioEditar(usuario);
-                JOptionPane.showMessageDialog(jPanel1, "Operación realizada con éxito.","Usuario",JOptionPane.INFORMATION_MESSAGE);
-                controlUsuarioListar();
+        switch (btnEditarUsuario.getText()) {
+            case "Cancelar":
+                deshabilitarControles();
                 limpiarControles();
-                deshabilitarControles();                
-                txtUsuarioContrasena.setText("");
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, "Error al realizar la operación solicitada.","Usuario", JOptionPane.WARNING_MESSAGE);
-            }
+                tbllistaUsuario.setEnabled(true);
+                break;
+            case "Editar":
+                btnEditarUsuario.setText("Guardar");
+                btnAgregarUsuario.setText("Cancelar");
+                tbllistaUsuario.setEnabled(false);
+                habilitarControles();
+                break;
+            case "Guardar":
+                usuario.setUsuDNI(txtUsuarioDNI.getText());
+                usuario.setUsuNombres(txtUsuarioNombres.getText());
+                usuario.setUsuApellidos(txtUsuarioApellidos.getText());
+                usuario.setUsuCorreo(txtUsuarioCorreo.getText());
+                usuario.setUsuNivel(cbxUsuarioNivel.getSelectedIndex());
+                usuario.setUsuNombreUsuario(txtUsuarioNombreUsuario.getText());
+                usuario.setUsuContrasena(String.valueOf(txtUsuarioContrasena.getPassword()));
+                usuario.setUsuEstado(cbxUsuarioEstado.getSelectedIndex());
+                tbllistaUsuario.setEnabled(true);
+                try {
+                    controlUsuarioEditar(usuario);
+                    JOptionPane.showMessageDialog(jPanel1, "Operación realizada con éxito.","Usuario",JOptionPane.INFORMATION_MESSAGE);
+                    controlUsuarioListar();
+                    limpiarControles();
+                    deshabilitarControles();
+                    txtUsuarioContrasena.setText("");
+                    txtBuscarUsuario.setEnabled(true);
+                    tbllistaUsuario.setEnabled(true);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, "Error al realizar la operación solicitada.","Usuario", JOptionPane.WARNING_MESSAGE);
+                }   break;
+            default:
+                break;
         }
     }//GEN-LAST:event_btnEditarUsuarioActionPerformed
 

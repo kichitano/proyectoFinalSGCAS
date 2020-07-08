@@ -26,9 +26,10 @@ public class ControllerUsuario {
     public Usuario controlUsuarioIniciarSesion(String nombreUsuario, char[] contrasenaUsuario) throws SQLException{
         usuario = new Usuario();
         Connection connection = controllerConexion.conectarBD();    
-        CallableStatement callableStatement = connection.prepareCall("{call usp_S_validarUsuario(?,?)}");    
+        CallableStatement callableStatement = connection.prepareCall("{call usp_S_validarUsuario(?,?,?)}");    
         callableStatement.setString(1, nombreUsuario);    
-        callableStatement.setString(2, String.valueOf(contrasenaUsuario));      
+        callableStatement.setString(2, String.valueOf(contrasenaUsuario));   
+        callableStatement.setInt(3, 0);
         ResultSet resultSet = callableStatement.executeQuery();
         while(resultSet.next()){
             usuario.setUsuId(resultSet.getInt(1));

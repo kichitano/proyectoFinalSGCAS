@@ -126,7 +126,7 @@ public class ViewDetalleSolicitudCambio extends javax.swing.JFrame {
                 rSButtonMetro2ActionPerformed(evt);
             }
         });
-        jPanel1.add(rSButtonMetro2, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 220, 60, -1));
+        jPanel1.add(rSButtonMetro2, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 220, 60, 30));
 
         jTextField6.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jPanel1.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 140, 250, 30));
@@ -196,13 +196,13 @@ public class ViewDetalleSolicitudCambio extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void rSButtonMetro2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSButtonMetro2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rSButtonMetro2ActionPerformed
-
     private void rSButtonMetro3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSButtonMetro3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_rSButtonMetro3ActionPerformed
+
+    private void rSButtonMetro2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSButtonMetro2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rSButtonMetro2ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -52,6 +52,7 @@ public class ViewpnlProyecto extends javax.swing.JPanel {
         jComboBox3 = new javax.swing.JComboBox<>();
         jLabel13 = new javax.swing.JLabel();
         rSButtonMetro5 = new rsbuttom.RSButtonMetro();
+        btnAgregarMiembro1 = new rsbuttom.RSButtonMetro();
 
         rSButtonMetro3.setBackground(new java.awt.Color(0, 0, 51));
         rSButtonMetro3.setText("Editar");
@@ -86,13 +87,12 @@ public class ViewpnlProyecto extends javax.swing.JPanel {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID Proyecto", "Nombre de proyecto", "Jefe designado", "Metodologia", "Descripcion", "Q Miembros", "Fecha Registro", "Estado"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -107,14 +107,14 @@ public class ViewpnlProyecto extends javax.swing.JPanel {
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 380, 90, 30));
 
         btnAgregarMiembro.setBackground(new java.awt.Color(0, 0, 51));
-        btnAgregarMiembro.setText("Agregar Miembros");
+        btnAgregarMiembro.setText("Seleccionar Fases/Entregables");
         btnAgregarMiembro.setColorNormal(new java.awt.Color(0, 0, 51));
         btnAgregarMiembro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgregarMiembroActionPerformed(evt);
             }
         });
-        jPanel1.add(btnAgregarMiembro, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 270, 160, -1));
+        jPanel1.add(btnAgregarMiembro, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 270, 230, -1));
 
         rSButtonMetro2.setBackground(new java.awt.Color(0, 0, 51));
         rSButtonMetro2.setText("Guardar");
@@ -134,7 +134,7 @@ public class ViewpnlProyecto extends javax.swing.JPanel {
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 110, 140, 30));
 
         jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Miembro", "Jefe de Proyecto" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Petter Jhony", "Chrisitan Cespedes" }));
         jPanel1.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 140, 170, 30));
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -178,6 +178,16 @@ public class ViewpnlProyecto extends javax.swing.JPanel {
         });
         jPanel1.add(rSButtonMetro5, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 270, -1, -1));
 
+        btnAgregarMiembro1.setBackground(new java.awt.Color(0, 0, 51));
+        btnAgregarMiembro1.setText("Agregar Miembros");
+        btnAgregarMiembro1.setColorNormal(new java.awt.Color(0, 0, 51));
+        btnAgregarMiembro1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarMiembro1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnAgregarMiembro1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 270, 160, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -194,7 +204,7 @@ public class ViewpnlProyecto extends javax.swing.JPanel {
 
     private void btnAgregarMiembroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarMiembroActionPerformed
         // TODO add your handling code here:
-         ViewAgregarMiembro frm = new ViewAgregarMiembro();
+         ViewSeleccionarFaseEntregable frm = new ViewSeleccionarFaseEntregable(null,true);
          frm.setVisible(true);
     }//GEN-LAST:event_btnAgregarMiembroActionPerformed
 
@@ -210,9 +220,15 @@ public class ViewpnlProyecto extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_rSButtonMetro5ActionPerformed
 
+    private void btnAgregarMiembro1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarMiembro1ActionPerformed
+         ViewAgregarMiembro frm = new ViewAgregarMiembro();
+         frm.setVisible(true);
+    }//GEN-LAST:event_btnAgregarMiembro1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private rsbuttom.RSButtonMetro btnAgregarMiembro;
+    private rsbuttom.RSButtonMetro btnAgregarMiembro1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JComboBox<String> jComboBox3;

@@ -1,3 +1,40 @@
+CREATE PROCEDURE usp_I_agregarMetodologia(
+	IN `metNombre` VARCHAR(100),
+	IN `metFechaRegistro` DATE,
+	IN `metEstado` INT)
+INSERT INTO metodologia(
+metodologia.metNombre,
+metodologia.metFechaRegistro,
+metodologia.metEstado)
+VALUES
+(metNombre,
+metFechaRegistro,
+metEstado);
+
+CREATE PROCEDURE usp_S_obtenerContrasena(
+	IN `usuId` INT
+)
+SELECT usuario.usuContrasena
+FROM
+usuario
+WHERE
+usuario.usuId = usuId;
+
+CREATE PROCEDURE usp_S_obtenerMetodologias()
+SELECT * FROM metodologia;
+
+CREATE PROCEDURE usp_U_editarMetodologia(
+	IN `metId` INT,
+	IN `metNombre` VARCHAR(100),
+	IN `metEstado` INT
+)
+UPDATE metodologia
+SET
+metodologia.metNombre = metNombre,
+metodologia.metEstado = metEstado
+WHERE
+metodologia.metId = metId;
+
 CREATE PROCEDURE usp_I_agregarUsuario(
 	IN `usuDNI` VARCHAR(20),
 	IN `usuNombres` VARCHAR(100),
@@ -29,8 +66,6 @@ usuContrasena,
 usuFechaRegistro,
 usuEstado);
 
-
-
 CREATE PROCEDURE usp_S_obtenerUsuarios()
 SELECT
 usuario.usuId,
@@ -44,7 +79,6 @@ usuario.usuFechaRegistro,
 usuario.usuEstado
 FROM
 usuario
-
 
 CREATE PROCEDURE usp_S_validarUsuario(
 	IN `usuNombreUsuario` VARCHAR(20),
@@ -65,4 +99,30 @@ FROM
 usuario
 WHERE usuario.usuNombreUsuario = usuNombreUsuario
 AND usuario.usuContrasena = usuContrasena
-AND usuario.usuEstado = "1"
+AND usuario.usuEstado = "1";
+
+CREATE PROCEDURE usp_U_editarUsuario(
+	IN `usuId` INT,
+	IN `usuDNI` VARCHAR(20),
+	IN `usuNombres` VARCHAR(100),
+	IN `usuApellidos` VARCHAR(100),
+	IN `usuCorreo` VARCHAR(100),
+	IN `usuNivel` INT,
+	IN `usuNombreUsuario` VARCHAR(20),
+	IN `usuContrasena` LONGTEXT,
+	IN `usuFechaRegistro` DATE,
+	IN `usuEstado` INT
+)
+UPDATE usuario
+SET
+usuario.usuDNI = usuDNI,
+usuario.usuNombres = usuNombres,
+usuario.usuApellidos = usuApellidos,
+usuario.usuCorreo = usuCorreo,
+usuario.usuNivel = usuNivel,
+usuario.usuNombreUsuario = usuNombreUsuario,
+usuario.usuContrasena = usuContrasena,
+usuario.usuFechaRegistro = usuFechaRegistro,
+usuario.usuEstado = usuEstado
+WHERE
+usuario.usuId = usuId;
