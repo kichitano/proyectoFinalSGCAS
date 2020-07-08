@@ -5,6 +5,9 @@
  */
 package View;
 
+import Model.Entregable;
+import Model.Fase;
+import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -13,15 +16,28 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ViewEntregableRelacion extends javax.swing.JDialog {
 
+    ArrayList<Entregable> listaEntregables;
+    ArrayList<Fase> listaFases;
+    DefaultTableModel defaultTableModelentregableRelacion;
+    int faseID;
+    int entregableID;
     /**
      * Creates new form ViewEntregableRelacion
      */
-    public ViewEntregableRelacion(java.awt.Frame parent, boolean modal) {
+    public ViewEntregableRelacion(java.awt.Frame parent, boolean modal,  ArrayList<Fase> listaFases, int faseID, int entregableID) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(null);
         
-        DefaultTableModel model = (DefaultTableModel)tbllistaEntregable.getModel();
-        model.addRow(new Object[]{false,"Nada"});
+        defaultTableModelentregableRelacion = (DefaultTableModel)tbllistaEntregable.getModel();
+        
+        this.listaFases = listaFases;
+        this.faseID = faseID;
+        this.entregableID = entregableID;
+        cargarLista();
+    }
+
+    ViewEntregableRelacion(Object object, boolean b) {
     }
 
     /**
@@ -33,10 +49,15 @@ public class ViewEntregableRelacion extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        rSPanelMaterial1 = new RSMaterialComponent.RSPanelMaterial();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbllistaEntregable = new rojerusan.RSTableMetro1();
+        cbxListaFases = new RSMaterialComponent.RSComboBoxMaterial();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        rSPanelMaterial1.setBackground(new java.awt.Color(255, 255, 255));
+        rSPanelMaterial1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tbllistaEntregable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -74,29 +95,36 @@ public class ViewEntregableRelacion extends javax.swing.JDialog {
             tbllistaEntregable.getColumnModel().getColumn(2).setResizable(false);
         }
 
+        rSPanelMaterial1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, -1, 220));
+
+        cbxListaFases.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Metodologias" }));
+        cbxListaFases.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxListaFasesActionPerformed(evt);
+            }
+        });
+        rSPanelMaterial1.add(cbxListaFases, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 450, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 472, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(rSPanelMaterial1, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(69, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap()))
+            .addComponent(rSPanelMaterial1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cbxListaFasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxListaFasesActionPerformed
+        thCargarEntregables cargarEntregables = new thCargarEntregables();
+        cargarEntregables.start();
+    }//GEN-LAST:event_cbxListaFasesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -141,7 +169,35 @@ public class ViewEntregableRelacion extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private RSMaterialComponent.RSComboBoxMaterial cbxListaFases;
     private javax.swing.JScrollPane jScrollPane2;
+    private RSMaterialComponent.RSPanelMaterial rSPanelMaterial1;
     private rojerusan.RSTableMetro1 tbllistaEntregable;
     // End of variables declaration//GEN-END:variables
+
+    private void cargarLista() {
+        for(int i = 0; i < listaFases.size(); i++){
+            cbxListaFases.addItem(listaFases.get(i).getFasNombre());
+        }
+    }
+    
+    public class thCargarEntregables extends Thread
+    {
+        @Override
+        public void run()
+        {
+            defaultTableModelentregableRelacion.getDataVector().removeAllElements();   
+            listaEntregables = new ArrayList<>(listaFases.get(cbxListaFases.getSelectedIndex() - 1).getEntregableCollection());        
+            for(int i = 0; i < listaEntregables.size(); i++){
+                if(faseID != (cbxListaFases.getSelectedIndex()-1) && entregableID != listaEntregables.get(i).getEntId()){
+                    defaultTableModelentregableRelacion.addRow(new Object[]{
+                    false,
+                    listaEntregables.get(i).getEntId(),
+                    listaEntregables.get(i).getEntNombre()
+                    });
+                }
+            }
+            this.interrupt();  
+        }
+    }    
 }

@@ -212,6 +212,11 @@ public class ViewpnlUsuario extends javax.swing.JPanel {
 
         txtBuscarUsuario.setForeground(new java.awt.Color(0, 0, 51));
         txtBuscarUsuario.setPlaceholder("Ingrese texto a buscar...");
+        txtBuscarUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBuscarUsuarioActionPerformed(evt);
+            }
+        });
         txtBuscarUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtBuscarUsuarioKeyReleased(evt);
@@ -325,6 +330,10 @@ public class ViewpnlUsuario extends javax.swing.JPanel {
            rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + busquedaUsuario));
         }
     }//GEN-LAST:event_txtBuscarUsuarioKeyReleased
+
+    private void txtBuscarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarUsuarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBuscarUsuarioActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -12,6 +12,7 @@
     <class>Model.Entregable</class>
     <class>Model.Fase</class>
     <class>Model.Solicitudcambio</class>
+    <class>Model.Relacionentregable</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3305/dbsgcas?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

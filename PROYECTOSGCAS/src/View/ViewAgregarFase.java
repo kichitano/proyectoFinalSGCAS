@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -26,10 +27,11 @@ public class ViewAgregarFase extends javax.swing.JDialog {
     Fase fase;
     Entregable entregable;    
     ArrayList<Fase> listaFases = new ArrayList<>();
-    ArrayList<Entregable> listaeEntregables = new ArrayList<>();
+    ArrayList<Entregable> listaEntregables = new ArrayList<>();
     DefaultTableModel defaultTableModelfase;
     DefaultTableModel defaultTableModelentregable;
     TableRowSorter<TableModel> rowSorter;
+    TableRowSorter<TableModel> rowSorter2;
     String tituloMetodologia;
     /**
      * Creates new form ViewAgregarFase2
@@ -53,6 +55,10 @@ public class ViewAgregarFase extends javax.swing.JDialog {
                     txtEntregableNombre.setText("");
                     btnAgregarEntregable.setEnabled(true);
                     btnQuitarEntregable.setEnabled(true);
+                    listaEntregables = new ArrayList<>();
+                    try{
+                        entregableListar();
+                    }catch(Exception e){}                    
                 }
             }      
         });        
@@ -64,8 +70,14 @@ public class ViewAgregarFase extends javax.swing.JDialog {
                 JTable table =(JTable) mouseEvent.getSource();
                 Point point = mouseEvent.getPoint();
                 int row = table.rowAtPoint(point);
-                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {  
-                    /*  ABRIR VENTANA DE ENTREGABLES    */
+                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {                      
+                        ViewEntregableRelacion viewEntregableRelacion = new ViewEntregableRelacion(null,true,
+                                listaFases,
+                                (int) tbllistaFase.getValueAt(tbllistaFase.getSelectedRow(), 0),
+                                (int) tbllistaEntregable.getValueAt(tbllistaEntregable.getSelectedRow(), 0)
+                        );
+                        viewEntregableRelacion.setVisible(true);
+                        
                 }
             }      
         });        
@@ -120,14 +132,14 @@ public class ViewAgregarFase extends javax.swing.JDialog {
 
             },
             new String [] {
-                "#", "Nombre de Entregable", "Estado", "Relaciones"
+                "#", "Nombre de Entregable", "Relaciones"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -142,7 +154,7 @@ public class ViewAgregarFase extends javax.swing.JDialog {
         tbllistaEntregable.setName(""); // NOI18N
         jScrollPane2.setViewportView(tbllistaEntregable);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 430, 610, 150));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 450, 610, 150));
 
         tbllistaFase.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -171,12 +183,12 @@ public class ViewAgregarFase extends javax.swing.JDialog {
         tbllistaFase.setName(""); // NOI18N
         jScrollPane3.setViewportView(tbllistaFase);
 
-        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, 610, 140));
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 610, 140));
 
         txtEntregableNombre.setForeground(new java.awt.Color(0, 0, 51));
         txtEntregableNombre.setEnabled(false);
         txtEntregableNombre.setPlaceholder("Nombre de Entregable");
-        jPanel1.add(txtEntregableNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 330, 40));
+        jPanel1.add(txtEntregableNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 350, 330, 40));
 
         cbxFaseEstado.setForeground(new java.awt.Color(0, 0, 51));
         cbxFaseEstado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Estado", "Activo", "Inactivo" }));
@@ -197,7 +209,7 @@ public class ViewAgregarFase extends javax.swing.JDialog {
                 btnCerrarFaseActionPerformed(evt);
             }
         });
-        jPanel1.add(btnCerrarFase, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 590, 270, 40));
+        jPanel1.add(btnCerrarFase, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 610, 270, 40));
 
         btnEditarFase.setText("Editar");
         btnEditarFase.setColorPrimario(new java.awt.Color(0, 0, 51));
@@ -218,7 +230,7 @@ public class ViewAgregarFase extends javax.swing.JDialog {
                 btnAgregarEntregableActionPerformed(evt);
             }
         });
-        jPanel1.add(btnAgregarEntregable, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 340, 130, 40));
+        jPanel1.add(btnAgregarEntregable, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 350, 130, 40));
 
         btnQuitarEntregable.setText("Quitar");
         btnQuitarEntregable.setColorPrimario(new java.awt.Color(0, 0, 51));
@@ -229,7 +241,7 @@ public class ViewAgregarFase extends javax.swing.JDialog {
                 btnQuitarEntregableActionPerformed(evt);
             }
         });
-        jPanel1.add(btnQuitarEntregable, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 340, 130, -1));
+        jPanel1.add(btnQuitarEntregable, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 350, 130, -1));
 
         txtBuscarEntregable.setForeground(new java.awt.Color(0, 0, 51));
         txtBuscarEntregable.setPlaceholder("Ingrese texto de entregable a buscar...");
@@ -238,7 +250,7 @@ public class ViewAgregarFase extends javax.swing.JDialog {
                 txtBuscarEntregableKeyReleased(evt);
             }
         });
-        jPanel1.add(txtBuscarEntregable, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 610, 30));
+        jPanel1.add(txtBuscarEntregable, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 400, 610, 40));
 
         txtBuscarFase.setForeground(new java.awt.Color(0, 0, 51));
         txtBuscarFase.setPlaceholder("Ingrese texto de fase a buscar...");
@@ -247,7 +259,7 @@ public class ViewAgregarFase extends javax.swing.JDialog {
                 txtBuscarFaseKeyReleased(evt);
             }
         });
-        jPanel1.add(txtBuscarFase, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, 610, 30));
+        jPanel1.add(txtBuscarFase, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, 610, 40));
 
         btnAgregarFase.setText("Nuevo");
         btnAgregarFase.setColorPrimario(new java.awt.Color(0, 0, 51));
@@ -267,9 +279,7 @@ public class ViewAgregarFase extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 648, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 672, Short.MAX_VALUE)
         );
 
         pack();
@@ -301,7 +311,12 @@ public class ViewAgregarFase extends javax.swing.JDialog {
     }//GEN-LAST:event_btnEditarFaseActionPerformed
 
     private void btnAgregarEntregableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarEntregableActionPerformed
-        entregable = new Entregable(0, tituloMetodologia);
+        entregable = new Entregable(0, txtEntregableNombre.getText());
+        entregable.setFase(listaFases.get(tbllistaFase.getSelectedRow()));
+        listaEntregables.add(entregable);        
+        txtEntregableNombre.setText("");        
+        listaFases.get(tbllistaFase.getSelectedRow()).setEntregableCollection(listaEntregables);        
+        entregableListar();
     }//GEN-LAST:event_btnAgregarEntregableActionPerformed
 
     private void btnQuitarEntregableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarEntregableActionPerformed
@@ -309,16 +324,21 @@ public class ViewAgregarFase extends javax.swing.JDialog {
     }//GEN-LAST:event_btnQuitarEntregableActionPerformed
 
     private void txtBuscarEntregableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarEntregableKeyReleased
-        String busquedaUsuario = txtBuscarEntregable.getText();
-        if (busquedaUsuario.trim().length() == 0) {
-            //rowSorter.setRowFilter(null);
+        String busquedaEntregable = txtBuscarEntregable.getText();
+        if (busquedaEntregable.trim().length() == 0) {
+           rowSorter2.setRowFilter(null);
         } else {
-            //rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + busquedaUsuario));
+           rowSorter2.setRowFilter(RowFilter.regexFilter("(?i)" + busquedaEntregable));
         }
     }//GEN-LAST:event_txtBuscarEntregableKeyReleased
 
     private void txtBuscarFaseKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarFaseKeyReleased
-        // TODO add your handling code here:
+        String busquedaFase = txtBuscarFase.getText();
+        if (busquedaFase.trim().length() == 0) {
+           rowSorter.setRowFilter(null);
+        } else {
+           rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + busquedaFase));
+        }
     }//GEN-LAST:event_txtBuscarFaseKeyReleased
 
     private void btnAgregarFaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarFaseActionPerformed
@@ -422,5 +442,22 @@ public class ViewAgregarFase extends javax.swing.JDialog {
                 cbxFaseEstado.getItemAt(listaFases.get(i).getFasEstado())
             });
         }
+    }
+
+    private void entregableListar() {
+        defaultTableModelentregable.getDataVector().removeAllElements();
+        rowSorter2 = new TableRowSorter<>(tbllistaEntregable.getModel());
+        tbllistaEntregable.setRowSorter(rowSorter2);        
+        listaEntregables = new ArrayList<>(listaFases.get(tbllistaFase.getSelectedRow()).getEntregableCollection());        
+        for(int i = 0; i < listaEntregables.size(); i++){
+            listaEntregables.get(i).setEntId(i+1);
+            defaultTableModelentregable.addRow(new Object[]{
+                i+1,
+                listaEntregables.get(i).getEntNombre(),
+                0
+            });
+        }        
+        listaFases.get(tbllistaFase.getSelectedRow()).setEntregableCollection(listaEntregables);
+        tbllistaFase.setValueAt(listaEntregables.size(), tbllistaFase.getSelectedRow(), 2);
     }
 }

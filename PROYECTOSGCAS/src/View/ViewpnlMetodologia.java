@@ -167,6 +167,11 @@ public class ViewpnlMetodologia extends javax.swing.JPanel {
 
         txtBuscarMetodologia.setForeground(new java.awt.Color(0, 0, 51));
         txtBuscarMetodologia.setPlaceholder("Ingrese texto a buscar...");
+        txtBuscarMetodologia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBuscarMetodologiaActionPerformed(evt);
+            }
+        });
         txtBuscarMetodologia.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtBuscarMetodologiaKeyReleased(evt);
@@ -249,6 +254,7 @@ public class ViewpnlMetodologia extends javax.swing.JPanel {
                     lblMetodologiaCodigo.setText("");
                     lblMetodologiaFecha.setText("");
                     controlMetodologiaListar();
+                    txtBuscarMetodologia.setEnabled(true);
                 }catch(HeadlessException | SQLException ex){
                     JOptionPane.showMessageDialog(null, "Error al realizar la operación solicitada.","Metodologia", JOptionPane.WARNING_MESSAGE);
                     deshabilitarControles();
@@ -301,6 +307,10 @@ public class ViewpnlMetodologia extends javax.swing.JPanel {
             viewAgregarFase.setVisible(true);
         }        
     }//GEN-LAST:event_btnMetodologiaFaseActionPerformed
+
+    private void txtBuscarMetodologiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarMetodologiaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBuscarMetodologiaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

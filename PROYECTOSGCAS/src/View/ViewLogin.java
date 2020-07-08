@@ -220,14 +220,14 @@ public class ViewLogin extends javax.swing.JFrame {
 
     public class thiniciarSesion extends Thread
     {
-       @Override
-       public void run()
-       {
-           txtNombreUsuario.setEnabled(false);
-           txtContrasenaUsuario.setEnabled(false);
-           btnIniciarSesion.setEnabled(false);
-           pbaCargando.setVisible(true);           
-          try {
+        @Override
+        public void run()
+        {
+            txtNombreUsuario.setEnabled(false);
+            txtContrasenaUsuario.setEnabled(false);
+            btnIniciarSesion.setEnabled(false);
+            pbaCargando.setVisible(true);           
+            try {
                 controlUsuarioIniciarSesion();
                 if(usuario != null){
                     ViewPrincipal viewPrincipal = new ViewPrincipal(usuario);
@@ -243,8 +243,8 @@ public class ViewLogin extends javax.swing.JFrame {
             txtContrasenaUsuario.setEnabled(true);
             btnIniciarSesion.setEnabled(true);
             pbaCargando.setVisible(false); 
-          this.interrupt();  
-       }
+            this.interrupt();  
+        }
     }
     
     private void controlUsuarioIniciarSesion() throws SQLException {

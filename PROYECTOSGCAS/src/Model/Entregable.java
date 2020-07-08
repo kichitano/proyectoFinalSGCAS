@@ -48,6 +48,10 @@ public class Entregable implements Serializable {
     private Fase fase;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "eNTREGABLEentId")
     private Collection<Detalleentregable> detalleentregableCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eNTREGABLEentId1")
+    private Collection<Relacionentregable> relacionentregableCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eNTREGABLEentId2")
+    private Collection<Relacionentregable> relacionentregableCollection1;
 
     public Entregable() {
     }
@@ -91,6 +95,22 @@ public class Entregable implements Serializable {
 
     public void setDetalleentregableCollection(Collection<Detalleentregable> detalleentregableCollection) {
         this.detalleentregableCollection = detalleentregableCollection;
+    }
+
+    public Collection<Relacionentregable> getRelacionentregableCollection() {
+        return relacionentregableCollection;
+    }
+
+    public void setRelacionentregableCollection(Collection<Relacionentregable> relacionentregableCollection) {
+        this.relacionentregableCollection = relacionentregableCollection;
+    }
+
+    public Collection<Relacionentregable> getRelacionentregableCollection1() {
+        return relacionentregableCollection1;
+    }
+
+    public void setRelacionentregableCollection1(Collection<Relacionentregable> relacionentregableCollection1) {
+        this.relacionentregableCollection1 = relacionentregableCollection1;
     }
 
     @Override
