@@ -5,9 +5,14 @@
  */
 package View;
 
+import Model.Entregable;
 import Model.Fase;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -19,10 +24,13 @@ import javax.swing.table.TableRowSorter;
 public class ViewAgregarFase extends javax.swing.JDialog {
 
     Fase fase;
-    String tituloMetodologia;
-    ArrayList<Fase> listaFases;
+    Entregable entregable;    
+    ArrayList<Fase> listaFases = new ArrayList<>();
+    ArrayList<Entregable> listaeEntregables = new ArrayList<>();
     DefaultTableModel defaultTableModelfase;
+    DefaultTableModel defaultTableModelentregable;
     TableRowSorter<TableModel> rowSorter;
+    String tituloMetodologia;
     /**
      * Creates new form ViewAgregarFase2
      */
@@ -30,7 +38,37 @@ public class ViewAgregarFase extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
-        lblTituloMetodologia.setText(tituloMetodologia);
+        lblTituloMetodologia.setText(tituloMetodologia);        
+        this.defaultTableModelfase = (DefaultTableModel) tbllistaFase.getModel();
+        tbllistaFase.getTableHeader().setReorderingAllowed(false);
+        tbllistaFase.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                JTable table =(JTable) mouseEvent.getSource();
+                Point point = mouseEvent.getPoint();
+                int row = table.rowAtPoint(point);
+                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {  
+                    txtBuscarEntregable.setEnabled(false);
+                    txtEntregableNombre.setEnabled(true);                    
+                    txtEntregableNombre.setText("");
+                    btnAgregarEntregable.setEnabled(true);
+                    btnQuitarEntregable.setEnabled(true);
+                }
+            }      
+        });        
+        this.defaultTableModelentregable = (DefaultTableModel) tbllistaEntregable.getModel();
+        tbllistaEntregable.getTableHeader().setReorderingAllowed(false);
+        tbllistaEntregable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                JTable table =(JTable) mouseEvent.getSource();
+                Point point = mouseEvent.getPoint();
+                int row = table.rowAtPoint(point);
+                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {  
+                    /*  ABRIR VENTANA DE ENTREGABLES    */
+                }
+            }      
+        });        
     }
 
     ViewAgregarFase(Object object, boolean b) {
@@ -238,120 +276,36 @@ public class ViewAgregarFase extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCerrarFaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarFaseActionPerformed
-        switch (btnCerrarFase.getText()) {
-            case "Nuevo":/*
-            limpiarControles();
-            habilitarControles();*/
-            btnCerrarFase.setText("Agregar");
-            btnEditarFase.setText("Cancelar");
-            txtBuscarEntregable.setEnabled(false);/*
-            tbllistaMetodologia.setEnabled(false);
-            tbllistaMetodologia.clearSelection();
-            fechaRegistro = java.sql.Date.valueOf(LocalDate.now());
-            lblMetodologiaFecha.setText(fechaRegistro.toString());
-            break;
-            case "Agregar":
-            try{
-                metodologia = new Metodologia(
-                    0,
-                    txtMetodologiaNombre.getText(),
-                    fechaRegistro,
-                    cbxMetodologiaEstado.getSelectedIndex());
-                controlMetodologiaGuardar(metodologia);
-                JOptionPane.showMessageDialog(jPanel1, "Operación realizada con éxito.","Metodologia",JOptionPane.INFORMATION_MESSAGE);
-                lblMetodologiaCodigo.setText("");
-                lblMetodologiaFecha.setText("");
-                controlMetodologiaListar();
-            }catch(HeadlessException | SQLException ex){
-                JOptionPane.showMessageDialog(null, "Error al realizar la operación solicitada.","Metodologia", JOptionPane.WARNING_MESSAGE);
-                deshabilitarControles();
-            }   break;
-            case "Cancelar":
-            deshabilitarControles();
-            insertarMetodologiaFormulario();
-            tbllistaMetodologia.setEnabled(true);
-            break;
-            default:*/
-            break;
-        }
+        this.dispose();
     }//GEN-LAST:event_btnCerrarFaseActionPerformed
 
     private void btnEditarFaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarFaseActionPerformed
         switch (btnEditarFase.getText()) {
-            case "Cancelar":/*
-            deshabilitarControles();
-            limpiarControles();
-            tbllistaMetodologia.setEnabled(true);
-            break;
-            case "Editar":
-            btnEditarFase.setText("Guardar");
-            btnCerrarFase.setText("Cancelar");
-            tbllistaMetodologia.setEnabled(false);
-            habilitarControles();
-            break;
-            case "Guardar":
-            metodologia.setMetNombre(txtMetodologiaNombre.getText());
-            metodologia.setMetEstado(cbxMetodologiaEstado.getSelectedIndex());
-            tbllistaMetodologia.setEnabled(true);
-            try {
-                controlMetodologiaEditar(metodologia);
-                JOptionPane.showMessageDialog(jPanel1, "Operación realizada con éxito.","Metodologia",JOptionPane.INFORMATION_MESSAGE);
-                controlMetodologiaListar();
-                limpiarControles();
-                deshabilitarControles();
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, "Error al realizar la operación solicitada.","Metodologia", JOptionPane.WARNING_MESSAGE);
-            }   break;
-            default:*/
+            case "Cancelar":
+            txtFaseNombre.setEnabled(false);
+            cbxFaseEstado.setEnabled(false);
+            btnAgregarFase.setText("Nuevo");
+            btnEditarFase.setText("Editar");
+            txtBuscarFase.setEnabled(true);
+            tbllistaFase.setEnabled(true);
+            tbllistaFase.clearSelection();
+             
+            txtBuscarEntregable.setEnabled(false);
+            txtEntregableNombre.setEnabled(true);                    
+            txtEntregableNombre.setText("");
+            btnAgregarEntregable.setEnabled(true);
+            btnQuitarEntregable.setEnabled(true);
+            
             break;
         }
     }//GEN-LAST:event_btnEditarFaseActionPerformed
 
     private void btnAgregarEntregableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarEntregableActionPerformed
-        // TODO add your handling code here:
+        entregable = new Entregable(0, tituloMetodologia);
     }//GEN-LAST:event_btnAgregarEntregableActionPerformed
 
     private void btnQuitarEntregableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarEntregableActionPerformed
-        switch (btnAgregarFase.getText()) {
-            case "Nuevo":     
-                btnAgregarFase.setText("Agregar");
-                btnEditarFase.setText("Cancelar");
-                txtFaseNombre.setText("");
-                txtFaseNombre.setEnabled(true);
-                txtBuscarFase.setEnabled(false);
-                cbxFaseEstado.setEnabled(true);
-                txtEntregableNombre.setText("");
-                txtEntregableNombre.setEnabled(true);             
-                break;
-            case "Agregar":
-                
-                
-                
-                /*
-                try{
-                    metodologia = new Metodologia(
-                            0,
-                            txtMetodologiaNombre.getText(),
-                            fechaRegistro,
-                            cbxMetodologiaEstado.getSelectedIndex());
-                    controlMetodologiaGuardar(metodologia);
-                    JOptionPane.showMessageDialog(jPanel1, "Operación realizada con éxito.","Metodologia",JOptionPane.INFORMATION_MESSAGE);
-                    lblMetodologiaCodigo.setText("");
-                    lblMetodologiaFecha.setText("");
-                    controlMetodologiaListar();
-                }catch(HeadlessException | SQLException ex){
-                    JOptionPane.showMessageDialog(null, "Error al realizar la operación solicitada.","Metodologia", JOptionPane.WARNING_MESSAGE);
-                    deshabilitarControles();
-                }  */
-                break;
-            case "Cancelar":/*
-                deshabilitarControles();
-                insertarMetodologiaFormulario();
-                tbllistaMetodologia.setEnabled(true);*/
-                break;
-            default:
-                break;
-        }
+        
     }//GEN-LAST:event_btnQuitarEntregableActionPerformed
 
     private void txtBuscarEntregableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarEntregableKeyReleased
@@ -369,40 +323,23 @@ public class ViewAgregarFase extends javax.swing.JDialog {
 
     private void btnAgregarFaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarFaseActionPerformed
         switch (btnAgregarFase.getText()) {
-            case "Nuevo":                
-                //limpiarControles();
-                //habilitarControles();
+            case "Nuevo":
+                txtFaseNombre.setEnabled(true);
+                cbxFaseEstado.setEnabled(true);
+                btnEditarFase.setEnabled(true);
                 btnAgregarFase.setText("Agregar");
-                btnEditarFase.setText("Cancelar");
+                btnEditarFase.setText("Cancelar");                
                 txtBuscarFase.setEnabled(false);
                 tbllistaFase.setEnabled(false);
-                tbllistaFase.clearSelection();
-                //fechaRegistro = java.sql.Date.valueOf(LocalDate.now());
-                //lblMetodologiaFecha.setText(fechaRegistro.toString());                
+                tbllistaFase.clearSelection();             
                 break;
             case "Agregar":
                 fase = new Fase(0, txtFaseNombre.getText(), cbxFaseEstado.getSelectedIndex());
                 listaFases.add(fase);
                 faseListar();
-                /*
-                try{
-                    metodologia = new Metodologia(
-                            0,
-                            txtMetodologiaNombre.getText(),
-                            fechaRegistro,
-                            cbxMetodologiaEstado.getSelectedIndex());
-                    controlMetodologiaGuardar(metodologia);
-                    JOptionPane.showMessageDialog(jPanel1, "Operación realizada con éxito.","Metodologia",JOptionPane.INFORMATION_MESSAGE);
-                    lblMetodologiaCodigo.setText("");
-                    lblMetodologiaFecha.setText("");
-                    controlMetodologiaListar();
-                }catch(HeadlessException | SQLException ex){
-                    JOptionPane.showMessageDialog(null, "Error al realizar la operación solicitada.","Metodologia", JOptionPane.WARNING_MESSAGE);
-                    deshabilitarControles();
-                }   break;*/
+                txtFaseNombre.setText("");
+                cbxFaseEstado.setSelectedIndex(0);
             case "Cancelar":
-                //deshabilitarControles();
-                //insertarMetodologiaFormulario();
                 tbllistaFase.setEnabled(true);
                 break;
             default:
@@ -479,7 +416,7 @@ public class ViewAgregarFase extends javax.swing.JDialog {
         tbllistaFase.setRowSorter(rowSorter);
         for(int i = 0; i < listaFases.size(); i++){
             defaultTableModelfase.addRow(new Object[]{
-                "",
+                i+1,
                 listaFases.get(i).getFasNombre(),
                 0,
                 cbxFaseEstado.getItemAt(listaFases.get(i).getFasEstado())
