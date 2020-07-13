@@ -34,12 +34,15 @@ public class Relacionentregable implements Serializable {
     @Basic(optional = false)
     @Column(name = "idrelacionENTREGABLE")
     private Integer idrelacionENTREGABLE;
-    @JoinColumn(name = "ENTREGABLE_entId1", referencedColumnName = "entId")
+    @JoinColumn(name = "detalleENTREGABLE_detEntregableId1", referencedColumnName = "detEntregableId")
     @ManyToOne(optional = false)
-    private Entregable eNTREGABLEentId1;
-    @JoinColumn(name = "ENTREGABLE_entId2", referencedColumnName = "entId")
+    private Detalleentregable detalleENTREGABLEdetEntregableId1;
+    @JoinColumn(name = "detalleENTREGABLE_detEntregableId2", referencedColumnName = "detEntregableId")
     @ManyToOne(optional = false)
-    private Entregable eNTREGABLEentId2;
+    private Detalleentregable detalleENTREGABLEdetEntregableId2;
+    @JoinColumn(name = "PROYECTO_proId", referencedColumnName = "proId")
+    @ManyToOne(optional = false)
+    private Proyecto pROYECTOproId;
 
     public Relacionentregable() {
     }
@@ -56,20 +59,28 @@ public class Relacionentregable implements Serializable {
         this.idrelacionENTREGABLE = idrelacionENTREGABLE;
     }
 
-    public Entregable getENTREGABLEentId1() {
-        return eNTREGABLEentId1;
+    public Detalleentregable getDetalleENTREGABLEdetEntregableId1() {
+        return detalleENTREGABLEdetEntregableId1;
     }
 
-    public void setENTREGABLEentId1(Entregable eNTREGABLEentId1) {
-        this.eNTREGABLEentId1 = eNTREGABLEentId1;
+    public void setDetalleENTREGABLEdetEntregableId1(Detalleentregable detalleENTREGABLEdetEntregableId1) {
+        this.detalleENTREGABLEdetEntregableId1 = detalleENTREGABLEdetEntregableId1;
     }
 
-    public Entregable getENTREGABLEentId2() {
-        return eNTREGABLEentId2;
+    public Detalleentregable getDetalleENTREGABLEdetEntregableId2() {
+        return detalleENTREGABLEdetEntregableId2;
     }
 
-    public void setENTREGABLEentId2(Entregable eNTREGABLEentId2) {
-        this.eNTREGABLEentId2 = eNTREGABLEentId2;
+    public void setDetalleENTREGABLEdetEntregableId2(Detalleentregable detalleENTREGABLEdetEntregableId2) {
+        this.detalleENTREGABLEdetEntregableId2 = detalleENTREGABLEdetEntregableId2;
+    }
+
+    public Proyecto getPROYECTOproId() {
+        return pROYECTOproId;
+    }
+
+    public void setPROYECTOproId(Proyecto pROYECTOproId) {
+        this.pROYECTOproId = pROYECTOproId;
     }
 
     @Override

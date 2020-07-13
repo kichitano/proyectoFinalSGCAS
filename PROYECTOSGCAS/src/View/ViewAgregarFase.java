@@ -5,13 +5,23 @@
  */
 package View;
 
+import Controller.ControllerEntregable;
+import Controller.ControllerFase;
 import Model.Entregable;
 import Model.Fase;
+import Model.Metodologia;
+import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -24,24 +34,32 @@ import javax.swing.table.TableRowSorter;
  */
 public class ViewAgregarFase extends javax.swing.JDialog {
 
+    Metodologia metodologia;
     Fase fase;
     Entregable entregable;    
-    ArrayList<Fase> listaFases = new ArrayList<>();
-    ArrayList<Entregable> listaEntregables = new ArrayList<>();
+    ControllerFase controllerFase = new ControllerFase();
+    ControllerEntregable controllerEntregable = new ControllerEntregable();
+    List<Fase> listaFase;
+    List<Entregable> listaEntregable;
+    DefaultComboBoxModel defaultComboBoxModel;
     DefaultTableModel defaultTableModelfase;
     DefaultTableModel defaultTableModelentregable;
     TableRowSorter<TableModel> rowSorter;
     TableRowSorter<TableModel> rowSorter2;
-    String tituloMetodologia;
+    ArrayList<Integer> cantidadEntregables;
     /**
      * Creates new form ViewAgregarFase2
      */
-    public ViewAgregarFase(java.awt.Frame parent, boolean modal, String tituloMetodologia) {
+    public ViewAgregarFase(java.awt.Frame parent, boolean modal, Metodologia metodologia) throws SQLException {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
-        lblTituloMetodologia.setText(tituloMetodologia);        
-        this.defaultTableModelfase = (DefaultTableModel) tbllistaFase.getModel();
+        this.metodologia = metodologia;        
+        lblTituloMetodologia.setText(this.metodologia.getMetNombre());       
+        defaultComboBoxModel = (DefaultComboBoxModel) cbxFaseEstado.getModel();    
+        this.defaultTableModelentregable = (DefaultTableModel) tbllistaEntregable.getModel();      
+        tbllistaEntregable.getTableHeader().setReorderingAllowed(false);
+        this.defaultTableModelfase = (DefaultTableModel) tbllistaFase.getModel();      
         tbllistaFase.getTableHeader().setReorderingAllowed(false);
         tbllistaFase.addMouseListener(new MouseAdapter() {
             @Override
@@ -55,32 +73,35 @@ public class ViewAgregarFase extends javax.swing.JDialog {
                     txtEntregableNombre.setText("");
                     btnAgregarEntregable.setEnabled(true);
                     btnQuitarEntregable.setEnabled(true);
-                    listaEntregables = new ArrayList<>();
+                    fase = new Fase((int) tbllistaFase.getValueAt(tbllistaFase.getSelectedRow(), 0), 
+                            tbllistaFase.getValueAt(tbllistaFase.getSelectedRow(), 1).toString(),
+                            defaultComboBoxModel.getIndexOf(tbllistaFase.getValueAt(tbllistaFase.getSelectedRow(), 3))                                
+                            );
                     try{
-                        entregableListar();
-                    }catch(Exception e){}                    
+                        controlEntregableListar();
+                    }catch(Exception e){}
+                    btnEditarFase.setEnabled(true);
+                    txtFaseNombre.setText(fase.getFasNombre());
+                    cbxFaseEstado.setSelectedIndex(fase.getFasEstado());
                 }
             }      
-        });        
-        this.defaultTableModelentregable = (DefaultTableModel) tbllistaEntregable.getModel();
-        tbllistaEntregable.getTableHeader().setReorderingAllowed(false);
+        });
         tbllistaEntregable.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
                 JTable table =(JTable) mouseEvent.getSource();
                 Point point = mouseEvent.getPoint();
                 int row = table.rowAtPoint(point);
-                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {                      
-                        ViewEntregableRelacion viewEntregableRelacion = new ViewEntregableRelacion(null,true,
-                                listaFases,
-                                (int) tbllistaFase.getValueAt(tbllistaFase.getSelectedRow(), 0),
-                                (int) tbllistaEntregable.getValueAt(tbllistaEntregable.getSelectedRow(), 0)
-                        );
-                        viewEntregableRelacion.setVisible(true);
-                        
+                if (mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {                      
+                    entregable = new Entregable((int) tbllistaEntregable.getValueAt(tbllistaEntregable.getSelectedRow(), 0), 
+                            tbllistaEntregable.getValueAt(tbllistaEntregable.getSelectedRow(), 1).toString());
                 }
             }      
-        });        
+        });
+        
+        
+        controlFaseListar();
+        
     }
 
     ViewAgregarFase(Object object, boolean b) {
@@ -132,14 +153,14 @@ public class ViewAgregarFase extends javax.swing.JDialog {
 
             },
             new String [] {
-                "#", "Nombre de Entregable", "Relaciones"
+                "#", "Nombre de Entregable"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -153,6 +174,12 @@ public class ViewAgregarFase extends javax.swing.JDialog {
         tbllistaEntregable.setIntercellSpacing(new java.awt.Dimension(1, 1));
         tbllistaEntregable.setName(""); // NOI18N
         jScrollPane2.setViewportView(tbllistaEntregable);
+        if (tbllistaEntregable.getColumnModel().getColumnCount() > 0) {
+            tbllistaEntregable.getColumnModel().getColumn(0).setMinWidth(50);
+            tbllistaEntregable.getColumnModel().getColumn(0).setPreferredWidth(50);
+            tbllistaEntregable.getColumnModel().getColumn(0).setMaxWidth(50);
+            tbllistaEntregable.getColumnModel().getColumn(1).setResizable(false);
+        }
 
         jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 450, 610, 150));
 
@@ -168,7 +195,7 @@ public class ViewAgregarFase extends javax.swing.JDialog {
                 java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, true, false
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -182,6 +209,11 @@ public class ViewAgregarFase extends javax.swing.JDialog {
         tbllistaFase.setIntercellSpacing(new java.awt.Dimension(1, 1));
         tbllistaFase.setName(""); // NOI18N
         jScrollPane3.setViewportView(tbllistaFase);
+        if (tbllistaFase.getColumnModel().getColumnCount() > 0) {
+            tbllistaFase.getColumnModel().getColumn(0).setMinWidth(50);
+            tbllistaFase.getColumnModel().getColumn(0).setPreferredWidth(50);
+            tbllistaFase.getColumnModel().getColumn(0).setMaxWidth(50);
+        }
 
         jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 610, 140));
 
@@ -292,35 +324,84 @@ public class ViewAgregarFase extends javax.swing.JDialog {
     private void btnEditarFaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarFaseActionPerformed
         switch (btnEditarFase.getText()) {
             case "Cancelar":
-            txtFaseNombre.setEnabled(false);
-            cbxFaseEstado.setEnabled(false);
-            btnAgregarFase.setText("Nuevo");
-            btnEditarFase.setText("Editar");
-            txtBuscarFase.setEnabled(true);
-            tbllistaFase.setEnabled(true);
-            tbllistaFase.clearSelection();
-             
-            txtBuscarEntregable.setEnabled(false);
-            txtEntregableNombre.setEnabled(true);                    
-            txtEntregableNombre.setText("");
-            btnAgregarEntregable.setEnabled(true);
-            btnQuitarEntregable.setEnabled(true);
-            
-            break;
+                txtFaseNombre.setEnabled(false);
+                cbxFaseEstado.setEnabled(false);
+                btnAgregarFase.setText("Nuevo");
+                btnEditarFase.setText("Editar");
+                txtBuscarFase.setEnabled(true);
+                tbllistaFase.setEnabled(true);
+                tbllistaFase.clearSelection();
+                txtBuscarEntregable.setEnabled(false);
+                txtEntregableNombre.setEnabled(true);                    
+                txtEntregableNombre.setText("");
+                btnAgregarEntregable.setEnabled(true);
+                btnQuitarEntregable.setEnabled(true);
+                break;
+            case "Editar":
+                btnEditarFase.setText("Guardar");
+                btnAgregarFase.setText("Cancelar");
+                tbllistaFase.setEnabled(false);
+                btnEditarFase.setEnabled(true); 
+                txtFaseNombre.setEnabled(true);
+                cbxFaseEstado.setEnabled(true);  
+                break;
+            case "Guardar":                
+                metodologia.setMetNombre(txtFaseNombre.getText());
+                metodologia.setMetEstado(cbxFaseEstado.getSelectedIndex());
+                tbllistaFase.setEnabled(true);
+                try {
+                    fase.setFasNombre(txtFaseNombre.getText());
+                    fase.setFasEstado(cbxFaseEstado.getSelectedIndex());
+                    fase.setMETODOLOGIAmetId(metodologia);
+                    controlFaseEditar(fase);
+                    JOptionPane.showMessageDialog(jPanel1, "Operación realizada con éxito.","Fase",JOptionPane.INFORMATION_MESSAGE);
+                    controlFaseListar();
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, "Error al realizar la operación solicitada.","Fase", JOptionPane.WARNING_MESSAGE);                    
+                } 
+                txtFaseNombre.setEnabled(false);
+                cbxFaseEstado.setEnabled(false);
+                btnAgregarFase.setText("Nuevo");
+                btnEditarFase.setText("Editar");
+                txtFaseNombre.setText("");
+                cbxFaseEstado.setSelectedIndex(0);
+                break;
+            default:
+                break;
         }
+        
+        
     }//GEN-LAST:event_btnEditarFaseActionPerformed
 
     private void btnAgregarEntregableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarEntregableActionPerformed
-        entregable = new Entregable(0, txtEntregableNombre.getText());
-        entregable.setFase(listaFases.get(tbllistaFase.getSelectedRow()));
-        listaEntregables.add(entregable);        
-        txtEntregableNombre.setText("");        
-        listaFases.get(tbllistaFase.getSelectedRow()).setEntregableCollection(listaEntregables);        
-        entregableListar();
+        try {
+            entregable = new Entregable(0, txtEntregableNombre.getText());
+            entregable.setFase(fase);
+            controlEntregableGuardar(entregable);
+            JOptionPane.showMessageDialog(jPanel1, "Operación realizada con éxito.","Entregable",JOptionPane.INFORMATION_MESSAGE);            
+            txtEntregableNombre.setText("");
+            controlEntregableListar();
+        } catch (SQLException ex) {
+            Logger.getLogger(ViewAgregarFase.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error al realizar la operación solicitada.","Entregable", JOptionPane.WARNING_MESSAGE);  
+        }
     }//GEN-LAST:event_btnAgregarEntregableActionPerformed
 
     private void btnQuitarEntregableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarEntregableActionPerformed
-        
+        int opcionSeleccionada = JOptionPane.showConfirmDialog(this,
+                "¿Seguro que desea elimnar el entregable?", "Entregable",
+                JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        if(opcionSeleccionada == 0){
+            try {
+                controlEntregableEliminar(entregable);
+                JOptionPane.showMessageDialog(jPanel1, "Operación realizada con éxito.","Entregable",JOptionPane.INFORMATION_MESSAGE);
+                controlFaseListar();
+                controlEntregableListar();
+            } catch (SQLException ex) {
+                Logger.getLogger(ViewAgregarFase.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Error al realizar la operación solicitada.","Entregable", JOptionPane.WARNING_MESSAGE);  
+            }
+        }
     }//GEN-LAST:event_btnQuitarEntregableActionPerformed
 
     private void txtBuscarEntregableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarEntregableKeyReleased
@@ -354,11 +435,18 @@ public class ViewAgregarFase extends javax.swing.JDialog {
                 tbllistaFase.clearSelection();             
                 break;
             case "Agregar":
-                fase = new Fase(0, txtFaseNombre.getText(), cbxFaseEstado.getSelectedIndex());
-                listaFases.add(fase);
-                faseListar();
-                txtFaseNombre.setText("");
-                cbxFaseEstado.setSelectedIndex(0);
+                try{
+                    fase = new Fase(0, txtFaseNombre.getText(), cbxFaseEstado.getSelectedIndex());
+                    fase.setMETODOLOGIAmetId(metodologia);
+                    controlFaseGuardar(fase);
+                    JOptionPane.showMessageDialog(jPanel1, "Operación realizada con éxito.","Fase",JOptionPane.INFORMATION_MESSAGE);    
+                    controlFaseListar();
+                    txtFaseNombre.setText("");
+                    cbxFaseEstado.setSelectedIndex(0);  
+                }catch(HeadlessException | SQLException ex){
+                    JOptionPane.showMessageDialog(null, "Error al realizar la operación solicitada.","Fase", JOptionPane.WARNING_MESSAGE);
+                }   
+                break;                
             case "Cancelar":
                 tbllistaFase.setEnabled(true);
                 break;
@@ -430,34 +518,51 @@ public class ViewAgregarFase extends javax.swing.JDialog {
     private RSMaterialComponent.RSTextFieldMaterial txtFaseNombre;
     // End of variables declaration//GEN-END:variables
 
-    private void faseListar() {
+    private void controlFaseListar() throws SQLException {
+        int j = 1;
         defaultTableModelfase.getDataVector().removeAllElements();
+        listaFase = controllerFase.controlFaseListar(metodologia.getMetId());
+        cantidadEntregables = controllerEntregable.contabilizarEntregables();
         rowSorter = new TableRowSorter<>(tbllistaFase.getModel());
         tbllistaFase.setRowSorter(rowSorter);
-        for(int i = 0; i < listaFases.size(); i++){
+        for(int i = 0; i < listaFase.size(); i++){
             defaultTableModelfase.addRow(new Object[]{
-                i+1,
-                listaFases.get(i).getFasNombre(),
-                0,
-                cbxFaseEstado.getItemAt(listaFases.get(i).getFasEstado())
+                listaFase.get(i).getFasId(),
+                listaFase.get(i).getFasNombre(),
+                cantidadEntregables.get(i+j),
+                cbxFaseEstado.getItemAt(listaFase.get(i).getFasEstado())
             });
+            j++;
         }
     }
 
-    private void entregableListar() {
+    private void controlEntregableListar() throws SQLException {
         defaultTableModelentregable.getDataVector().removeAllElements();
+        listaEntregable = controllerEntregable.controlEntregableListar(fase.getFasId()); 
         rowSorter2 = new TableRowSorter<>(tbllistaEntregable.getModel());
-        tbllistaEntregable.setRowSorter(rowSorter2);        
-        listaEntregables = new ArrayList<>(listaFases.get(tbllistaFase.getSelectedRow()).getEntregableCollection());        
-        for(int i = 0; i < listaEntregables.size(); i++){
-            listaEntregables.get(i).setEntId(i+1);
+        tbllistaEntregable.setRowSorter(rowSorter2);                
+        for(int i = 0; i < listaEntregable.size(); i++){
             defaultTableModelentregable.addRow(new Object[]{
-                i+1,
-                listaEntregables.get(i).getEntNombre(),
-                0
+                listaEntregable.get(i).getEntId(),
+                listaEntregable.get(i).getEntNombre()
             });
-        }        
-        listaFases.get(tbllistaFase.getSelectedRow()).setEntregableCollection(listaEntregables);
-        tbllistaFase.setValueAt(listaEntregables.size(), tbllistaFase.getSelectedRow(), 2);
+        }      
+        controlFaseListar();
+    }
+    
+    private void controlFaseGuardar(Fase fase) throws SQLException {
+        controllerFase.controlFaseGuardar(fase);
+    }
+
+    private void controlFaseEditar(Fase fase) throws SQLException {
+        controllerFase.controlFaseEditar(fase);
+    }
+    
+    private void controlEntregableGuardar(Entregable entregable) throws SQLException {
+        controllerEntregable.controlEntregableGuardar(entregable);
+    }
+
+    private void controlEntregableEliminar(Entregable entregable) throws SQLException {
+        controllerEntregable.controlEntregableEliminar(entregable);
     }
 }

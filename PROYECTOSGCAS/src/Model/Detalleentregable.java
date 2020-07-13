@@ -68,6 +68,10 @@ public class Detalleentregable implements Serializable {
     @JoinColumn(name = "usuarioProyecto_usuProyectoId", referencedColumnName = "usuProyectoId")
     @ManyToOne(optional = false)
     private Usuarioproyecto usuarioProyectousuProyectoId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "detalleENTREGABLEdetEntregableId1")
+    private Collection<Relacionentregable> relacionentregableCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "detalleENTREGABLEdetEntregableId2")
+    private Collection<Relacionentregable> relacionentregableCollection1;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "detalleEntregabledetEntregableId")
     private Collection<Solicitudcambio> solicitudcambioCollection;
 
@@ -164,6 +168,22 @@ public class Detalleentregable implements Serializable {
 
     public void setUsuarioProyectousuProyectoId(Usuarioproyecto usuarioProyectousuProyectoId) {
         this.usuarioProyectousuProyectoId = usuarioProyectousuProyectoId;
+    }
+
+    public Collection<Relacionentregable> getRelacionentregableCollection() {
+        return relacionentregableCollection;
+    }
+
+    public void setRelacionentregableCollection(Collection<Relacionentregable> relacionentregableCollection) {
+        this.relacionentregableCollection = relacionentregableCollection;
+    }
+
+    public Collection<Relacionentregable> getRelacionentregableCollection1() {
+        return relacionentregableCollection1;
+    }
+
+    public void setRelacionentregableCollection1(Collection<Relacionentregable> relacionentregableCollection1) {
+        this.relacionentregableCollection1 = relacionentregableCollection1;
     }
 
     public Collection<Solicitudcambio> getSolicitudcambioCollection() {

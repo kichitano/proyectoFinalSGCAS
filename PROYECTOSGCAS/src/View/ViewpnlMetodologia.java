@@ -302,9 +302,13 @@ public class ViewpnlMetodologia extends javax.swing.JPanel {
 
     private void btnMetodologiaFaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMetodologiaFaseActionPerformed
         if(!(txtMetodologiaNombre.getText().equals(""))){
-            String tituloMetodologia = txtMetodologiaNombre.getText();
-            ViewAgregarFase viewAgregarFase = new ViewAgregarFase(null,true,tituloMetodologia);
-            viewAgregarFase.setVisible(true);
+            try {
+                String tituloMetodologia = txtMetodologiaNombre.getText();
+                ViewAgregarFase viewAgregarFase = new ViewAgregarFase(null, true, metodologia);
+                viewAgregarFase.setVisible(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(ViewpnlMetodologia.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }        
     }//GEN-LAST:event_btnMetodologiaFaseActionPerformed
 

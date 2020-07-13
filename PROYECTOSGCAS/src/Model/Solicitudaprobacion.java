@@ -52,6 +52,9 @@ public class Solicitudaprobacion implements Serializable {
     @JoinColumn(name = "solicitudCAMBIO_solCambioId", referencedColumnName = "solCambioId")
     @ManyToOne(optional = false)
     private Solicitudcambio solicitudCAMBIOsolCambioId;
+    @JoinColumn(name = "usuarioProyecto_usuProyectoId", referencedColumnName = "usuProyectoId")
+    @ManyToOne(optional = false)
+    private Usuarioproyecto usuarioProyectousuProyectoId;
 
     public Solicitudaprobacion() {
     }
@@ -105,6 +108,14 @@ public class Solicitudaprobacion implements Serializable {
 
     public void setSolicitudCAMBIOsolCambioId(Solicitudcambio solicitudCAMBIOsolCambioId) {
         this.solicitudCAMBIOsolCambioId = solicitudCAMBIOsolCambioId;
+    }
+
+    public Usuarioproyecto getUsuarioProyectousuProyectoId() {
+        return usuarioProyectousuProyectoId;
+    }
+
+    public void setUsuarioProyectousuProyectoId(Usuarioproyecto usuarioProyectousuProyectoId) {
+        this.usuarioProyectousuProyectoId = usuarioProyectousuProyectoId;
     }
 
     @Override

@@ -51,6 +51,8 @@ public class Usuarioproyecto implements Serializable {
     @JoinColumn(name = "USUARIO_usuId", referencedColumnName = "usuId")
     @ManyToOne(optional = false)
     private Usuario uSUARIOusuId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioProyectousuProyectoId")
+    private Collection<Solicitudaprobacion> solicitudaprobacionCollection;
 
     public Usuarioproyecto() {
     }
@@ -111,6 +113,14 @@ public class Usuarioproyecto implements Serializable {
 
     public void setUSUARIOusuId(Usuario uSUARIOusuId) {
         this.uSUARIOusuId = uSUARIOusuId;
+    }
+
+    public Collection<Solicitudaprobacion> getSolicitudaprobacionCollection() {
+        return solicitudaprobacionCollection;
+    }
+
+    public void setSolicitudaprobacionCollection(Collection<Solicitudaprobacion> solicitudaprobacionCollection) {
+        this.solicitudaprobacionCollection = solicitudaprobacionCollection;
     }
 
     @Override

@@ -58,6 +58,8 @@ public class Proyecto implements Serializable {
     private int proEstado;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pROYECTOproId")
     private Collection<Detalleentregable> detalleentregableCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pROYECTOproId")
+    private Collection<Relacionentregable> relacionentregableCollection;
     @JoinColumns({
         @JoinColumn(name = "METODOLOGIA_metId", referencedColumnName = "metId"),
         @JoinColumn(name = "METODOLOGIA_metId", referencedColumnName = "metId")})
@@ -139,6 +141,14 @@ public class Proyecto implements Serializable {
 
     public void setDetalleentregableCollection(Collection<Detalleentregable> detalleentregableCollection) {
         this.detalleentregableCollection = detalleentregableCollection;
+    }
+
+    public Collection<Relacionentregable> getRelacionentregableCollection() {
+        return relacionentregableCollection;
+    }
+
+    public void setRelacionentregableCollection(Collection<Relacionentregable> relacionentregableCollection) {
+        this.relacionentregableCollection = relacionentregableCollection;
     }
 
     public Metodologia getMetodologia() {
