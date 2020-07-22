@@ -2,6 +2,7 @@ package Model;
 
 import Model.Detalleentregable;
 import Model.Metodologia;
+import Model.Relacionentregable;
 import Model.Solicitudcambio;
 import Model.Usuario;
 import Model.Usuarioproyecto;
@@ -11,7 +12,7 @@ import javax.persistence.metamodel.CollectionAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2020-07-01T16:27:10")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2020-07-21T13:54:16")
 @StaticMetamodel(Proyecto.class)
 public class Proyecto_ { 
 
@@ -20,6 +21,7 @@ public class Proyecto_ {
     public static volatile SingularAttribute<Proyecto, Usuario> uSUARIOusuId;
     public static volatile CollectionAttribute<Proyecto, Detalleentregable> detalleentregableCollection;
     public static volatile SingularAttribute<Proyecto, Metodologia> metodologia;
+    public static volatile CollectionAttribute<Proyecto, Relacionentregable> relacionentregableCollection;
     public static volatile SingularAttribute<Proyecto, String> proNombre;
     public static volatile CollectionAttribute<Proyecto, Usuarioproyecto> usuarioproyectoCollection;
     public static volatile SingularAttribute<Proyecto, Integer> proId;

@@ -93,7 +93,7 @@ public class ViewpnlMetodologia extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel1.setText("Gestionar Metodologia");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 360, 40));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 360, 40));
 
         rSPanelMaterial1.setBackground(new java.awt.Color(255, 255, 255));
         rSPanelMaterial1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -303,7 +303,6 @@ public class ViewpnlMetodologia extends javax.swing.JPanel {
     private void btnMetodologiaFaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMetodologiaFaseActionPerformed
         if(!(txtMetodologiaNombre.getText().equals(""))){
             try {
-                String tituloMetodologia = txtMetodologiaNombre.getText();
                 ViewAgregarFase viewAgregarFase = new ViewAgregarFase(null, true, metodologia);
                 viewAgregarFase.setVisible(true);
             } catch (SQLException ex) {
@@ -375,6 +374,10 @@ public class ViewpnlMetodologia extends javax.swing.JPanel {
         controllerMetodologia.controlMetodologiaGuardar(metodologia);
     }
     
+    private void controlMetodologiaEditar(Metodologia metodologia) throws SQLException {
+        controllerMetodologia.controlMetodologiaEditar(metodologia);
+    }
+    
     private void controlMetodologiaListar() throws SQLException {
         defaultTableModel.getDataVector().removeAllElements();
         listaMetodologia = controllerMetodologia.controlMetodologiaListar();
@@ -389,8 +392,5 @@ public class ViewpnlMetodologia extends javax.swing.JPanel {
             });
         }        
     }      
-    
-    private void controlMetodologiaEditar(Metodologia metodologia) throws SQLException {
-        controllerMetodologia.controlMetodologiaEditar(metodologia);
-    }
+
 }

@@ -6,6 +6,8 @@
 package Controller;
 
 import Model.Entregable;
+import Model.Fase;
+import Model.Metodologia;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,6 +24,7 @@ public class ControllerEntregable {
     
     ControllerConexion controllerConexion = new ControllerConexion();
     Entregable entregable;
+    Fase fase;
     
     public void controlEntregableGuardar(Entregable entregable) throws SQLException {
         try (Connection connection = controllerConexion.conectarBD()) {
@@ -48,10 +51,11 @@ public class ControllerEntregable {
         return listaEntregable;
     }  
     
-    public ArrayList<Integer> contabilizarEntregables() throws SQLException{
+    public ArrayList<Integer> contabilizarEntregables(Metodologia metodologia) throws SQLException{
         ArrayList<Integer> cantidadEntregables = new ArrayList<>();
         try (Connection connection = controllerConexion.conectarBD()) {
-            CallableStatement callableStatement = connection.prepareCall("{call usp_S_obtenerCantidadEntregables()}");
+            CallableStatement callableStatement = connection.prepareCall("{call usp_S_obtenerCantidadEntregables(?)}");
+            callableStatement.setInt(1,metodologia.getMetId());
             ResultSet resultSet = callableStatement.executeQuery();
             while(resultSet.next()){
                 cantidadEntregables.add(resultSet.getInt(1));
@@ -69,4 +73,23 @@ public class ControllerEntregable {
         }
     }
     
+    public List<Entregable> controlEntregableMetodologia(Metodologia metodologia) throws SQLException {
+        List<Entregable> listaEntregable = new ArrayList<>();
+        try (Connection connection = controllerConexion.conectarBD()) {
+            CallableStatement callableStatement = connection.prepareCall("{call usp_S_obtenerEntregableMetodologia(?)}");
+            callableStatement.setInt(1, metodologia.getMetId());
+            ResultSet resultSet = callableStatement.executeQuery();
+            while(resultSet.next()){
+                entregable = new Entregable();
+                fase = new Fase();
+                entregable.setEntId(resultSet.getInt(1));
+                fase.setFasId(resultSet.getInt(2));                
+                entregable.setEntNombre(resultSet.getString(3));
+                fase.setFasNombre(resultSet.getString(4));
+                entregable.setFase(fase);
+                listaEntregable.add(entregable);
+            }
+        }
+        return listaEntregable;
+    } 
 }

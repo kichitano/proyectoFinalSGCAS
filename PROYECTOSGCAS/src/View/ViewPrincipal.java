@@ -813,36 +813,40 @@ public class ViewPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_tresMousePressed
 
     private void dosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dosActionPerformed
-        new ControllerCambiaPanel(pnlPrincipal, new View.ViewpnlProyecto());
-        if(this.dos.isSelected()){
-            this.dos.setColorNormal(new Color(204,204,204));
-            this.dos.setColorHover(new Color(204,204,204));
-            this.dos.setColorPressed(new Color(204,204,204));
-
-            this.uno.setColorNormal(new Color(0,0,51));
-            this.uno.setColorHover(new Color(204,204,204));
-            this.uno.setColorPressed(new Color(204,204,204));
-
-            this.tres.setColorNormal(new Color(0,0,51));
-            this.tres.setColorHover(new Color(204,204,204));
-            this.tres.setColorPressed(new Color(204,204,204));
-
-            this.cuatro.setColorNormal(new Color(0,0,51));
-            this.cuatro.setColorHover(new Color(204,204,204));
-            this.cuatro.setColorPressed(new Color(204,204,204));
-
-            this.cinco.setColorNormal(new Color(0,0,51));
-            this.cinco.setColorHover(new Color(204,204,204));
-            this.cinco.setColorPressed(new Color(204,204,204));
-
-            this.seis.setColorNormal(new Color(0,0,51));
-            this.seis.setColorHover(new Color(204,204,204));
-            this.seis.setColorPressed(new Color(204,204,204));
-
-        }else{
-            this.dos.setColorNormal(new Color(0,0,51));
-            this.dos.setColorHover(new Color(204,204,204));
-            this.dos.setColorPressed(new Color(204,204,204));
+        try {
+            new ControllerCambiaPanel(pnlPrincipal, new View.ViewpnlProyecto());
+            if(this.dos.isSelected()){
+                this.dos.setColorNormal(new Color(204,204,204));
+                this.dos.setColorHover(new Color(204,204,204));
+                this.dos.setColorPressed(new Color(204,204,204));
+                
+                this.uno.setColorNormal(new Color(0,0,51));
+                this.uno.setColorHover(new Color(204,204,204));
+                this.uno.setColorPressed(new Color(204,204,204));
+                
+                this.tres.setColorNormal(new Color(0,0,51));
+                this.tres.setColorHover(new Color(204,204,204));
+                this.tres.setColorPressed(new Color(204,204,204));
+                
+                this.cuatro.setColorNormal(new Color(0,0,51));
+                this.cuatro.setColorHover(new Color(204,204,204));
+                this.cuatro.setColorPressed(new Color(204,204,204));
+                
+                this.cinco.setColorNormal(new Color(0,0,51));
+                this.cinco.setColorHover(new Color(204,204,204));
+                this.cinco.setColorPressed(new Color(204,204,204));
+                
+                this.seis.setColorNormal(new Color(0,0,51));
+                this.seis.setColorHover(new Color(204,204,204));
+                this.seis.setColorPressed(new Color(204,204,204));
+                
+            }else{
+                this.dos.setColorNormal(new Color(0,0,51));
+                this.dos.setColorHover(new Color(204,204,204));
+                this.dos.setColorPressed(new Color(204,204,204));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ViewPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_dosActionPerformed
 

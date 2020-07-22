@@ -522,7 +522,7 @@ public class ViewAgregarFase extends javax.swing.JDialog {
         int j = 1;
         defaultTableModelfase.getDataVector().removeAllElements();
         listaFase = controllerFase.controlFaseListar(metodologia.getMetId());
-        cantidadEntregables = controllerEntregable.contabilizarEntregables();
+        cantidadEntregables = controllerEntregable.contabilizarEntregables(metodologia);
         rowSorter = new TableRowSorter<>(tbllistaFase.getModel());
         tbllistaFase.setRowSorter(rowSorter);
         for(int i = 0; i < listaFase.size(); i++){

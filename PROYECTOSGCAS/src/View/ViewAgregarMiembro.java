@@ -5,18 +5,53 @@
  */
 package View;
 
+import Controller.ControllerUsuario;
+import Controller.ControllerUsuarioProyecto;
+import Model.Proyecto;
+import Model.Usuario;
+import Model.Usuarioproyecto;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+
 /**
  *
- * @author ACER
+ * @author Christian
  */
-public class ViewAgregarMiembro extends javax.swing.JFrame {
+public class ViewAgregarMiembro extends javax.swing.JDialog {
 
     /**
-     * Creates new form frmAgregarMiembro
+     * Creates new form ViewAgregarMiembro2
      */
-    public ViewAgregarMiembro() {
+    ControllerUsuario controllerUsuario = new ControllerUsuario();
+    ControllerUsuarioProyecto controllerUsuarioProyecto = new ControllerUsuarioProyecto();
+    Proyecto proyecto;
+    Usuarioproyecto usuarioproyecto;
+    List<Usuario> listaUsuario;
+    List<Usuarioproyecto> listaUsuarioproyecto;
+    DefaultTableModel defaultTableModel;
+    TableRowSorter<TableModel> rowSorter;
+    
+    public ViewAgregarMiembro(java.awt.Frame parent, boolean modal, Proyecto proyecto, List<Usuario> listaUsuario) throws SQLException {
+        super(parent, modal);
         initComponents();
-        this.setLocationRelativeTo(null);
+        setLocationRelativeTo(null);
+        controlUsuarioListar();
+        this.proyecto = proyecto;
+        this.listaUsuario = listaUsuario;        
+        this.defaultTableModel = (DefaultTableModel) tbllistaMiembros.getModel();
+        tbllistaMiembros.getTableHeader().setReorderingAllowed(false);        
+        controlUsuarioProyectoListar();
+    }
+
+    ViewAgregarMiembro(Object object, boolean b) {
     }
 
     /**
@@ -30,22 +65,14 @@ public class ViewAgregarMiembro extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jTextField3 = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
-        rSButtonMetro2 = new rsbuttom.RSButtonMetro();
-        jLabel6 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jLabel7 = new javax.swing.JLabel();
-        jComboBox3 = new javax.swing.JComboBox<>();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-        rSButtonMetro3 = new rsbuttom.RSButtonMetro();
+        cbxProyectoMiembro = new RSMaterialComponent.RSComboBoxMaterial();
+        cbxMiembroEstado = new RSMaterialComponent.RSComboBoxMaterial();
+        cbxMiembroRol = new RSMaterialComponent.RSComboBoxMaterial();
+        txtBuscarMiembro = new RSMaterialComponent.RSTextFieldMaterial();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tbllistaMiembros = new rojerusan.RSTableMetro1();
+        btnAgregarMiembro = new rojeru_san.rsbutton.RSButtonGradiente();
+        btnEditarMiembro = new rojeru_san.rsbutton.RSButtonGradiente();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -53,146 +80,206 @@ public class ViewAgregarMiembro extends javax.swing.JFrame {
         jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Agregar Miembro");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 340, 40));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 200, 40));
 
-        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel12.setText("Lista de Miembro de Equipo");
-        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 300, 230, 30));
-
-        jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chrisitan Cespedes" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+        cbxProyectoMiembro.setForeground(new java.awt.Color(0, 0, 51));
+        cbxProyectoMiembro.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione Miembro" }));
+        cbxProyectoMiembro.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        cbxProyectoMiembro.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                cbxProyectoMiembroFocusGained(evt);
             }
         });
-        jPanel1.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 150, 170, 30));
+        jPanel1.add(cbxProyectoMiembro, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 170, -1));
 
-        jTextField3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        cbxMiembroEstado.setForeground(new java.awt.Color(0, 0, 51));
+        cbxMiembroEstado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Estado", "Activo", "Inactivo" }));
+        cbxMiembroEstado.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jPanel1.add(cbxMiembroEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 80, 120, -1));
+
+        cbxMiembroRol.setForeground(new java.awt.Color(0, 0, 51));
+        cbxMiembroRol.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Roles", "Analista", "Diseñador", "Programador", "Calidad", "Pruebas", "Configuracion", "Usuario Experto" }));
+        cbxMiembroRol.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jPanel1.add(cbxMiembroRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 80, 150, -1));
+
+        txtBuscarMiembro.setForeground(new java.awt.Color(0, 0, 51));
+        txtBuscarMiembro.setPlaceholder("Ingrese texto a buscar...");
+        txtBuscarMiembro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                txtBuscarMiembroActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 320, 290, 30));
+        txtBuscarMiembro.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarMiembroKeyReleased(evt);
+            }
+        });
+        jPanel1.add(txtBuscarMiembro, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 490, 40));
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel5.setText("Seleccionar Usuario: ");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 120, 140, 30));
-
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tbllistaMiembros.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "#", "Nombre", "Rol", "Estado"
+                "ID", "Nombre de Miembro", "Rol", "Estado"
             }
-        ));
-        jScrollPane2.setViewportView(jTable2);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 360, 540, 120));
-
-        rSButtonMetro2.setBackground(new java.awt.Color(0, 0, 51));
-        rSButtonMetro2.setText("Guardar");
-        rSButtonMetro2.setColorNormal(new java.awt.Color(0, 0, 51));
-        rSButtonMetro2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rSButtonMetro2ActionPerformed(evt);
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
             }
-        });
-        jPanel1.add(rSButtonMetro2, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 220, 100, -1));
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel6.setText("Buscar:");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 290, 150, 30));
-
-        jComboBox2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Analista", "Programador", "Diseñador" }));
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
-        jPanel1.add(jComboBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 220, 140, 30));
+        tbllistaMiembros.setIntercellSpacing(new java.awt.Dimension(1, 1));
+        tbllistaMiembros.setName(""); // NOI18N
+        jScrollPane3.setViewportView(tbllistaMiembros);
+        if (tbllistaMiembros.getColumnModel().getColumnCount() > 0) {
+            tbllistaMiembros.getColumnModel().getColumn(0).setMinWidth(65);
+            tbllistaMiembros.getColumnModel().getColumn(0).setPreferredWidth(65);
+            tbllistaMiembros.getColumnModel().getColumn(0).setMaxWidth(65);
+            tbllistaMiembros.getColumnModel().getColumn(1).setMinWidth(250);
+            tbllistaMiembros.getColumnModel().getColumn(1).setPreferredWidth(250);
+            tbllistaMiembros.getColumnModel().getColumn(1).setMaxWidth(250);
+        }
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel7.setText("Roles:");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 190, 140, 30));
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 490, 260));
 
-        jComboBox3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
-        jComboBox3.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregarMiembro.setText("Agregar");
+        btnAgregarMiembro.setColorPrimario(new java.awt.Color(0, 0, 51));
+        btnAgregarMiembro.setColorSecundarioHover(new java.awt.Color(0, 160, 255));
+        btnAgregarMiembro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox3ActionPerformed(evt);
+                btnAgregarMiembroActionPerformed(evt);
             }
         });
-        jPanel1.add(jComboBox3, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 220, 150, 30));
+        jPanel1.add(btnAgregarMiembro, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 30, 120, 40));
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel8.setText("Estado:");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, 140, 30));
-
-        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel13.setText("Informacion del Usuario");
-        jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 200, 30));
-
-        jTextField4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jPanel1.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 150, 380, 30));
-
-        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel9.setText("Nombre de Proyecto: ");
-        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 140, 30));
-
-        rSButtonMetro3.setBackground(new java.awt.Color(0, 0, 51));
-        rSButtonMetro3.setText("Editar");
-        rSButtonMetro3.setColorNormal(new java.awt.Color(0, 0, 51));
-        rSButtonMetro3.addActionListener(new java.awt.event.ActionListener() {
+        btnEditarMiembro.setText("Editar");
+        btnEditarMiembro.setColorPrimario(new java.awt.Color(0, 0, 51));
+        btnEditarMiembro.setColorSecundarioHover(new java.awt.Color(0, 160, 255));
+        btnEditarMiembro.setEnabled(false);
+        btnEditarMiembro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rSButtonMetro3ActionPerformed(evt);
+                btnEditarMiembroActionPerformed(evt);
             }
         });
-        jPanel1.add(rSButtonMetro3, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 220, 100, -1));
+        jPanel1.add(btnEditarMiembro, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 30, 120, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    private void cbxProyectoMiembroFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbxProyectoMiembroFocusGained
+        cbxProyectoMiembro.setSelectedItem("");
+    }//GEN-LAST:event_cbxProyectoMiembroFocusGained
 
-    private void rSButtonMetro2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSButtonMetro2ActionPerformed
+    private void txtBuscarMiembroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarMiembroActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_rSButtonMetro2ActionPerformed
+    }//GEN-LAST:event_txtBuscarMiembroActionPerformed
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox2ActionPerformed
+    private void txtBuscarMiembroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarMiembroKeyReleased
+        String busquedaUsuario = txtBuscarMiembro.getText();
+        if (busquedaUsuario.trim().length() == 0) {
+            rowSorter.setRowFilter(null);
+        } else {
+            rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + busquedaUsuario));
+        }
+    }//GEN-LAST:event_txtBuscarMiembroKeyReleased
 
-    private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox3ActionPerformed
+    private void btnAgregarMiembroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarMiembroActionPerformed
+        try {                                                  
+            try {
+                usuarioproyecto = new Usuarioproyecto(0, cbxMiembroEstado.getSelectedIndex(), cbxMiembroRol.getSelectedIndex());
+                usuarioproyecto.setPROYECTOproId(proyecto);
+                usuarioproyecto.setUSUARIOusuId(listaUsuario.get(cbxProyectoMiembro.getSelectedIndex()-1));
+                controlUsuarioProyectoGuardar(usuarioproyecto);
+                JOptionPane.showMessageDialog(jPanel1, "Operación realizada con éxito.","Entregable",JOptionPane.INFORMATION_MESSAGE);
+            } catch (SQLException ex) {
+                Logger.getLogger(ViewAgregarMiembro.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Error al realizar la operación solicitada.","Proyecto", JOptionPane.WARNING_MESSAGE);
+            }
+            cbxMiembroEstado.setSelectedIndex(0);
+            cbxMiembroRol.setSelectedIndex(0);
+            cbxProyectoMiembro.setSelectedIndex(0);
+            controlUsuarioProyectoListar();
+        } catch (SQLException ex) {
+            Logger.getLogger(ViewAgregarMiembro.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnAgregarMiembroActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    private void btnEditarMiembroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarMiembroActionPerformed
+        /*switch (btnEditarMiembro.getText()) {
+            case "Cancelar":
+            txtFaseNombre.setEnabled(false);
+            cbxFaseEstado.setEnabled(false);
+            btnAgregarFase.setText("Nuevo");
+            btnEditarMiembro.setText("Editar");
+            txtBuscarFase.setEnabled(true);
+            tbllistaFase.setEnabled(true);
+            tbllistaFase.clearSelection();
+            txtBuscarEntregable.setEnabled(false);
+            txtEntregableNombre.setEnabled(true);
+            txtEntregableNombre.setText("");
+            btnAgregarMiembro.setEnabled(true);
+            btnQuitarEntregable.setEnabled(true);
+            break;
+            case "Editar":
+            btnEditarMiembro.setText("Guardar");
+            btnAgregarFase.setText("Cancelar");
+            tbllistaFase.setEnabled(false);
+            btnEditarMiembro.setEnabled(true);
+            txtFaseNombre.setEnabled(true);
+            cbxFaseEstado.setEnabled(true);
+            break;
+            case "Guardar":
+            metodologia.setMetNombre(txtFaseNombre.getText());
+            metodologia.setMetEstado(cbxFaseEstado.getSelectedIndex());
+            tbllistaFase.setEnabled(true);
+            try {
+                fase.setFasNombre(txtFaseNombre.getText());
+                fase.setFasEstado(cbxFaseEstado.getSelectedIndex());
+                fase.setMETODOLOGIAmetId(metodologia);
+                controlFaseEditar(fase);
+                JOptionPane.showMessageDialog(jPanel1, "Operación realizada con éxito.","Fase",JOptionPane.INFORMATION_MESSAGE);
+                controlFaseListar();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Error al realizar la operación solicitada.","Fase", JOptionPane.WARNING_MESSAGE);
+            }
+            txtFaseNombre.setEnabled(false);
+            cbxFaseEstado.setEnabled(false);
+            btnAgregarFase.setText("Nuevo");
+            btnEditarMiembro.setText("Editar");
+            txtFaseNombre.setText("");
+            cbxFaseEstado.setSelectedIndex(0);
+            break;
+            default:
+            break;
+        }*/
 
-    private void rSButtonMetro3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSButtonMetro3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rSButtonMetro3ActionPerformed
+    }//GEN-LAST:event_btnEditarMiembroActionPerformed
 
     /**
      * @param args the command line arguments
@@ -222,32 +309,64 @@ public class ViewAgregarMiembro extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
 
-        /* Create and display the form */
+        /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ViewAgregarMiembro().setVisible(true);
+                ViewAgregarMiembro dialog = new ViewAgregarMiembro(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
+    private rojeru_san.rsbutton.RSButtonGradiente btnAgregarMiembro;
+    private rojeru_san.rsbutton.RSButtonGradiente btnEditarMiembro;
+    private RSMaterialComponent.RSComboBoxMaterial cbxMiembroEstado;
+    private RSMaterialComponent.RSComboBoxMaterial cbxMiembroRol;
+    private RSMaterialComponent.RSComboBoxMaterial cbxProyectoMiembro;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private rsbuttom.RSButtonMetro rSButtonMetro2;
-    private rsbuttom.RSButtonMetro rSButtonMetro3;
+    private javax.swing.JScrollPane jScrollPane3;
+    private rojerusan.RSTableMetro1 tbllistaMiembros;
+    private RSMaterialComponent.RSTextFieldMaterial txtBuscarMiembro;
     // End of variables declaration//GEN-END:variables
+
+    private void controlUsuarioListar() throws SQLException {
+        listaUsuario = controllerUsuario.controlUsuarioListar();
+        for(int i = 0; i < listaUsuario.size(); i++){
+            cbxProyectoMiembro.addItem(listaUsuario.get(i).getUsuNombres() + " " + listaUsuario.get(i).getUsuApellidos());
+        }        
+    }
+
+    private void controlUsuarioProyectoGuardar(Usuarioproyecto usuarioproyecto) throws SQLException {
+        controllerUsuarioProyecto.controlUsuarioProyectoGuardar(usuarioproyecto);
+    }
+
+    private void controlUsuarioProyectoListar() throws SQLException {
+        defaultTableModel.getDataVector().removeAllElements();
+        listaUsuarioproyecto = controllerUsuarioProyecto.controlProyectoListar(proyecto);
+        rowSorter = new TableRowSorter<>(tbllistaMiembros.getModel());
+        tbllistaMiembros.setRowSorter(rowSorter);
+        for(int i = 0; i < listaUsuarioproyecto.size(); i++){
+            for(int j = 0; j < listaUsuario.size(); j++){
+                if(Objects.equals(listaUsuario.get(j).getUsuId(), listaUsuarioproyecto.get(i).getUSUARIOusuId().getUsuId())){
+                    listaUsuarioproyecto.get(i).setUSUARIOusuId(listaUsuario.get(j));
+                    break;
+                }
+            }           
+            defaultTableModel.addRow(new Object[]{
+                listaUsuarioproyecto.get(i).getUsuProyectoId(),
+                listaUsuarioproyecto.get(i).getUSUARIOusuId().getUsuNombres() + " " + listaUsuarioproyecto.get(i).getUSUARIOusuId().getUsuApellidos(),
+                cbxMiembroRol.getItemAt(listaUsuarioproyecto.get(i).getUsuProyectoCargo()),
+                cbxMiembroEstado.getItemAt(listaUsuarioproyecto.get(i).getUsuProyectoEstado())                
+            });
+        }
+    }
+    
 }
