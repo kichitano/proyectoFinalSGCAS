@@ -52,9 +52,9 @@ public class ControllerProyecto {
                 proyecto.setProId(resultSet.getInt(1));
                 metodologia.setMetId(resultSet.getInt(2));
                 proyecto.setMetodologia(metodologia);
-                proyecto.setProNombre(resultSet.getString(3));
-                usuario.setUsuId(resultSet.getInt(4));
+                usuario.setUsuId(resultSet.getInt(3));
                 proyecto.setUSUARIOusuId(usuario);
+                proyecto.setProNombre(resultSet.getString(4));
                 proyecto.setProDescripcion(resultSet.getString(5));
                 proyecto.setProFechaInicio(resultSet.getDate(6));                
                 proyecto.setProEstado(resultSet.getInt(8));

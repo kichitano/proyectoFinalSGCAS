@@ -51,7 +51,6 @@ public class ViewpnlProyecto extends javax.swing.JPanel {
     
     public ViewpnlProyecto() throws SQLException {        
         initComponents();
-        controlMetodologiaListar();
         controlUsuarioListar();
         this.defaultTableModel = (DefaultTableModel) tbllistaProyecto.getModel();
         tbllistaProyecto.getTableHeader().setReorderingAllowed(false);

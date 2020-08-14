@@ -126,3 +126,156 @@ usuario.usuFechaRegistro = usuFechaRegistro,
 usuario.usuEstado = usuEstado
 WHERE
 usuario.usuId = usuId;
+
+
+
+
+
+
+
+------ NUEVOS USPS -------
+
+CREATE PROCEDURE usp_I_agregarEntregable (
+	IN `FASE_fasId` INT,
+	IN `entNombre` VARCHAR(50)
+)
+Insert into entregable (
+entregable.FASE_fasId,
+entregable.entNombre) values ( 
+FASE_fasId,entNombre
+)
+
+CREATE PROCEDURE usp_S_obtenerEntregables(
+	IN `FASE_fasId` INT
+)
+Select * from entregable where entregable.FASE_fasId = FASE_fasId
+
+CREATE PROCEDURE usp_I_agregarFase(
+	IN `METODOLOGIA_metId` INT,
+	IN `fasNombre` VARCHAR(50),
+	IN `fasEstado` INT
+)
+Insert into fase (
+fase.METODOLOGIA_metId,
+fase.fasNombre,
+fase.fasEstado) values (METODOLOGIA_metId,fasNombre,fasEstado)
+
+CREATE PROCEDURE usp_S_obtenerFases(
+	IN `METODOLOGIA_metId` INT
+)
+Select * from fase where fase.METODOLOGIA_metId = METODOLOGIA_metId
+
+CREATE PROCEDURE usp_U_editarFase(
+	IN `fasId` INT,
+	IN `fasNombre` VARCHAR(50),
+	IN `fasEstado` INT
+)
+UPDATE fase 
+SET
+fase.fasNombre = fasNombre,
+fase.fasEstado = fasEstado
+WHERE
+fase.fasId = fasId;
+
+CREATE PROCEDURE usp_S_obtenerProyectos()
+SELECT * FROM proyecto
+
+CREATE PROCEDURE usp_S_obtenerCantidadEntregables(
+	IN `METODOLOGIA_metId` INT
+)
+SELECT fase.fasId, COUNT(entregable.entId) AS cantidad
+FROM fase
+LEFT JOIN entregable ON fase.fasId = entregable.FASE_fasId
+WHERE fase.METODOLOGIA_metId = METODOLOGIA_metId
+GROUP BY fase.fasId
+
+CREATE PROCEDURE usp_D_eliminarEntregable(
+	IN `entId` INT
+)
+DELETE FROM entregable
+WHERE entregable.entId = entId
+
+CREATE PROCEDURE usp_S_obtenerCantidadMiembros()
+SELECT proyecto.proId, COUNT(usuarioproyecto.usuProyectoId) AS cantidad
+FROM proyecto
+LEFT JOIN usuarioproyecto ON proyecto.proId = usuarioproyecto.PROYECTO_proId
+GROUP BY proyecto.proId
+
+CREATE PROCEDURE usp_S_obtenerUsuariosProyecto(
+	IN `PROYECTO_proId` INT
+)
+SELECT * FROM usuarioproyecto
+WHERE usuarioproyecto.PROYECTO_proId = PROYECTO_proId
+
+CREATE PROCEDURE usp_I_agregarUsuarioProyecto(
+	IN `PROYECTO_proId` INT,
+	IN `USUARIO_usuId` INT,
+	IN `usuProyectoEstado` INT,
+	IN `usuProyectoCargo` INT
+)
+INSERT INTO usuarioproyecto
+(usuarioproyecto.PROYECTO_proId,
+usuarioproyecto.USUARIO_usuId,
+usuarioproyecto.usuProyectoEstado,
+usuarioproyecto.usuProyectoCargo)
+VALUES
+(PROYECTO_proId,
+USUARIO_usuId,
+usuProyectoEstado,
+usuProyectoCargo)
+
+CREATE PROCEDURE usp_S_obtenerEntregableMetodologia(
+	IN `metId` INT
+)
+SELECT 
+entregable.entId,
+entregable.FASE_fasId,
+entregable.entNombre,
+fase.fasNombre
+FROM
+entregable 
+INNER JOIN fase ON entregable.FASE_fasId = fase.fasId
+INNER JOIN metodologia ON fase.METODOLOGIA_metId = metodologia.metId
+WHERE metodologia.metId = metId
+
+CREATE PROCEDURE usp_S_obtenerMiembrosProyecto(
+	IN `proId` INT
+)
+SELECT
+usuarioproyecto.usuProyectoId,
+usuarioproyecto.USUARIO_usuId,
+usuario.usuDNI,
+usuario.usuNombres,
+usuario.usuApellidos,
+usuarioproyecto.usuProyectoCargo
+FROM
+usuarioproyecto
+INNER JOIN
+usuario ON usuarioproyecto.USUARIO_usuId = usuario.usuId
+INNER JOIN
+proyecto ON usuarioproyecto.PROYECTO_proId = proyecto.proId
+WHERE
+proyecto.proId = proId
+
+CREATE PROCEDURE usp_I_agregardetalleEntregable(
+	IN `PROYECTO_proId` INT,
+	IN `ENTREGABLE_entId` INT,
+	IN `usuarioProyecto_usuProyectoId` INT,
+	IN `detEntregableFechaInicio` DATE,
+	IN `detEntregableFechaFin` DATE,
+	IN `detEntregableEstado` INT
+)
+INSERT INTO detalleentregable
+(detalleentregable.PROYECTO_proId,
+detalleentregable.ENTREGABLE_entId,
+detalleentregable.usuarioProyecto_usuProyectoId,
+detalleentregable.detEntregableFechaInicio,
+detalleentregable.detEntregableFechaFin,
+detalleentregable.detEntregableEstado)
+VALUES
+(PROYECTO_proId,
+ENTREGABLE_entId,
+usuarioProyecto_usuProyectoId,
+detEntregableFechaInicio,
+detEntregableFechaFin,
+detEntregableEstado)

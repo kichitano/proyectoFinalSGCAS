@@ -15,7 +15,7 @@ import java.sql.SQLException;
  */
 public class ControllerConexion {
     
-    public static final String PROPERTY_URL_DB = "jdbc:mysql://localhost:3305/dbsgcas?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    public static final String PROPERTY_URL_DB = "jdbc:mysql://localhost:3306/dbsgcas?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     
     public Connection conectarBD() {        
         Connection connection = null;

@@ -79,7 +79,7 @@ public class ControllerUsuarioProyecto {
     public List<Usuarioproyecto> obtenerMiembrosProyecto(int proyectoID) throws SQLException{
         listaMiembros = new ArrayList<>();
         try (Connection connection = controllerConexion.conectarBD()) {
-            CallableStatement callableStatement = connection.prepareCall("{call usp_S_obtnerMiembrosProyecto(?)}");
+            CallableStatement callableStatement = connection.prepareCall("{call usp_S_obtenerMiembrosProyecto(?)}");
             callableStatement.setInt(1, proyectoID);
             ResultSet resultSet = callableStatement.executeQuery();
             while(resultSet.next()){
