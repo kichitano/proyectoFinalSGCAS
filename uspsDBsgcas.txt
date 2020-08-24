@@ -279,3 +279,11 @@ usuarioProyecto_usuProyectoId,
 detEntregableFechaInicio,
 detEntregableFechaFin,
 detEntregableEstado)
+
+CREATE PROCEDURE usp_D_eliminardetalleEntregable(
+	IN `PROYECTO_proId` INT,
+	IN `ENTREGABLE_entId` INT
+)
+DELETE FROM detalleentregable
+WHERE detalleentregable.PROYECTO_proId = PROYECTO_proId AND detalleentregable.ENTREGABLE_entId = ENTREGABLE_entId
+

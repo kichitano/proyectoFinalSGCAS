@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,6 +50,7 @@ public class ViewEntregableProyecto extends javax.swing.JDialog implements Table
     List<Fase> listaFases;
     List<Usuarioproyecto> listaUsuario;
     List<Detalleentregable> listaDetalleEntregable;
+    List<Detalleentregable> listaDetalleEntregableObtenida;
     Detalleentregable detalleentregable;
     Proyecto proyecto;
     Proyecto proyectodetalle;
@@ -59,6 +61,7 @@ public class ViewEntregableProyecto extends javax.swing.JDialog implements Table
     DefaultTableModel defaultTableModelentregableRelacion;
     int faseID;
     int entregableID;
+    int rol;
     String[] roles = {"Roles","Analista","Diseñador","Programador","Calidad","Pruebas","Configuracion","Usuario Experto"};
     String[] datosMiembro;
     int idMiembro;
@@ -68,7 +71,8 @@ public class ViewEntregableProyecto extends javax.swing.JDialog implements Table
     public ViewEntregableProyecto(java.awt.Frame parent, boolean modal, Proyecto proyecto) throws SQLException {
         super(parent, modal);
         initComponents();
-        this.proyecto = proyecto;        
+        this.proyecto = proyecto;     
+        controldetalleEntregableObtener(proyecto.getProId());
         setLocationRelativeTo(null);        
         defaultTableModelentregableRelacion = (DefaultTableModel)tbllistaEntregable.getModel();        
         tbllistaEntregable.setModel(defaultTableModelentregableRelacion);        
@@ -80,10 +84,15 @@ public class ViewEntregableProyecto extends javax.swing.JDialog implements Table
             public void mouseReleased(MouseEvent mouseEvent) {
                 JTable table =(JTable) mouseEvent.getSource();
                 if(table.getSelectedColumn() == 0 && table.getSelectedRow() != -1 && table.getValueAt(table.getSelectedRow(), 0).equals(false)){
-                    table.setValueAt("", table.getSelectedRow(), 3);
-                    table.setValueAt("", table.getSelectedRow(), 4);
-                    table.setValueAt(null, table.getSelectedRow(), 5);
-                    table.setValueAt(null, table.getSelectedRow(), 6);
+                    try {                       
+                        controldetalleEntregableEliminar(proyecto.getProId(), (int) table.getValueAt(table.getSelectedRow(), 1));
+                        table.setValueAt("", table.getSelectedRow(), 3);
+                        table.setValueAt("", table.getSelectedRow(), 4);
+                        table.setValueAt(null, table.getSelectedRow(), 5);
+                        table.setValueAt(null, table.getSelectedRow(), 6);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ViewEntregableProyecto.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }else if(table.getSelectedColumn() == 0 && table.getSelectedRow() != -1 && table.getValueAt(table.getSelectedRow(), 0).equals(true)){
                     try {  
                         proyectodetalle = proyecto;
@@ -104,7 +113,7 @@ public class ViewEntregableProyecto extends javax.swing.JDialog implements Table
                     } catch (SQLException ex) {
                         Logger.getLogger(ViewEntregableProyecto.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                }          
+                }
             }     
         });        
     }
@@ -212,8 +221,8 @@ public class ViewEntregableProyecto extends javax.swing.JDialog implements Table
 
     private void cbxListaFasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxListaFasesActionPerformed
         try {
-            
             cargarEntregables();
+            //leerEntregables();
         } catch (SQLException ex) {
             Logger.getLogger(ViewEntregableProyecto.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -293,9 +302,16 @@ public class ViewEntregableProyecto extends javax.swing.JDialog implements Table
             Object data = model.getValueAt(row, column);   
             if(column == 3){
                 if(!(data.toString().equals(""))){
+                    rol = 0;
                     datosMiembro = data.toString().split(":");
                     idMiembro = Integer.parseInt(datosMiembro[0]);
-                    tbllistaEntregable.setValueAt(roles[idMiembro], row, 4);
+                    for(int i = 0; i <= listaUsuario.size(); i++){
+                        if(listaUsuario.get(i).getUsuProyectoId() == idMiembro){
+                            rol = listaUsuario.get(i).getUsuProyectoCargo();
+                            break;
+                        }
+                    }
+                    model.setValueAt(roles[rol], row, 4);
                 }
             }else if(column == 0 && (Boolean) tbllistaEntregable.getValueAt(row, 0) == false && tbllistaEntregable.getValueAt(row, 3) != null && tbllistaEntregable.getValueAt(row, 3) != "" && tbllistaEntregable.getValueAt(row, 4) != null && tbllistaEntregable.getValueAt(row, 4) != ""){
                 entregable = new Entregable((Integer) tbllistaEntregable.getValueAt(row, 1));
@@ -311,8 +327,6 @@ public class ViewEntregableProyecto extends javax.swing.JDialog implements Table
                         .findFirst().isPresent()){
                             listaDetalleEntregable.remove(detalleentregable);
                         } 
-                int a = listaDetalleEntregable.size();
-                int b = a*2;
             }
         }        
     }
@@ -356,8 +370,14 @@ public class ViewEntregableProyecto extends javax.swing.JDialog implements Table
             listaEntregables = controllerEntregable.controlEntregableMetodologia(proyecto.getMetodologia());                
             for(int i = 0; i < listaEntregables.size(); i++){
                 if(listaEntregables.get(i).getFase().getFasNombre().equals(cbxListaFases.getSelectedItem())){
+                    boolean estado = false;
+                    for(int j = 0; j < listaDetalleEntregableObtenida.size(); j++ ){
+                        if(Objects.equals(listaDetalleEntregableObtenida.get(j).getENTREGABLEentId().getEntId(), listaEntregables.get(i).getEntId())){
+                            estado = true;
+                        }
+                    }
                    defaultTableModelentregableRelacion.addRow(new Object[]{
-                        false,
+                        estado,
                         listaEntregables.get(i).getEntId(),
                         listaEntregables.get(i).getEntNombre()
                     }); 
@@ -367,10 +387,18 @@ public class ViewEntregableProyecto extends javax.swing.JDialog implements Table
             tbllistaEntregable.getModel().addTableModelListener(this);
         } catch (SQLException ex) {
             Logger.getLogger(ViewEntregableProyecto.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }             
     }
     
     private void controldetalleEntregableGuardar(Detalleentregable detalleentregable) throws SQLException {
         controllerDetalleEntregable.controldetalleEntregableGuardar(detalleentregable);
     }
+    
+    private void controldetalleEntregableEliminar(int idProyecto, int idEntregable) throws SQLException {
+        controllerDetalleEntregable.controldetalleEntregableEliminar(idProyecto, idEntregable);
+    }
+
+    private void controldetalleEntregableObtener(int proId) throws SQLException {
+        listaDetalleEntregableObtenida =  controllerDetalleEntregable.controldetalleEntregableObtener(proId);
+    }   
 }
