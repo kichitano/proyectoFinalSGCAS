@@ -351,6 +351,12 @@ public class ViewEntregableProyecto extends javax.swing.JDialog implements Table
         JComboBox cbxListaMiembro = new JComboBox();           
         for(int i = 0; i < listaUsuario.size(); i++){
             cbxListaMiembro.addItem(listaUsuario.get(i).getUsuProyectoId() + ": " + listaUsuario.get(i).getUSUARIOusuId().getUsuNombres() + " " + listaUsuario.get(i).getUSUARIOusuId().getUsuApellidos());
+            for(int j = 0; j < listaDetalleEntregableObtenida.size(); j++ ){
+                if(Objects.equals(listaDetalleEntregableObtenida.get(j).getUsuarioProyectousuProyectoId().getUsuProyectoId(), listaUsuario.get(i).getUsuProyectoId())){
+                    cbxListaMiembro.setSelectedIndex(i);
+                }
+            }
+            
         }                
         tbllistaEntregable.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(cbxListaMiembro));
         tbllistaEntregable.getColumnModel().getColumn(5).setCellEditor(new DateTableEditor());        
